@@ -1,0 +1,38 @@
+﻿<Window x:Class="FlowMeter.SerialSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FlowMeter"
+        mc:Ignorable="d"
+        Title="SerialSettings" Height="338.8" Width="320" ResizeMode="NoResize" SourceInitialized="Window_SourceInitialized" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="32*"/>
+            <ColumnDefinition Width="101*"/>
+            <ColumnDefinition Width="122*"/>
+            <ColumnDefinition Width="58*"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="Port" Grid.Row="1" HorizontalAlignment="Left"   VerticalAlignment="Center" Height="29" Margin="1,6,0,5" Width="36" Grid.Column="1" />
+        <ComboBox x:Name="cmbPort" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="6.2,6,4.2,6" HorizontalContentAlignment="Center" Height="28" />
+        <Label Content="Baud Rate" Grid.Row="2" HorizontalAlignment="Left"   VerticalAlignment="Center" Height="28" Margin="1,6,0,6" Width="72" Grid.Column="1" />
+        <ComboBox x:Name="cmbBaudRate" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Margin="6.2,10,4.2,2" HorizontalContentAlignment="Center" Height="28" />
+        <Label Content="Data Bits" Grid.Row="3" HorizontalAlignment="Left"   VerticalAlignment="Center" Height="29" Margin="1,6,0,5" Width="64" Grid.Column="1" />
+        <ComboBox x:Name="cmbDataBits" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" Margin="6.2,6,4.2,6" HorizontalContentAlignment="Center" Height="28" />
+        <Label Content="Parity" Grid.Row="4" HorizontalAlignment="Left"   VerticalAlignment="Center" Height="29" Margin="1,6,0,5" Width="45" Grid.Column="1" />
+        <ComboBox x:Name="cmbParity" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" Margin="6.2,6,4.2,6" HorizontalContentAlignment="Center" Height="28" />
+        <Label Content="Stop Bits" Grid.Row="5" HorizontalAlignment="Left"   VerticalAlignment="Center" Height="28" Margin="1,6,0,6" Width="64" Grid.Column="1" />
+        <ComboBox x:Name="cmbStopBits" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" Margin="6.2,6,4.2,6" HorizontalContentAlignment="Center" Height="28" />
+        <Button Content="Ok" Grid.Column="1" HorizontalAlignment="Left" Margin="26,16,0,0" Grid.Row="6" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2" Click="OnOk" IsDefault="True"/>
+        <Button Content="Cancel" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Top" Width="75" Margin="47.2,16,0,0" Click="OnCancel" IsCancel="True"/>
+    </Grid>
+</Window>
