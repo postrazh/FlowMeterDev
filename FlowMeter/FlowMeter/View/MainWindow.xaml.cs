@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace FlowMeter
 {
@@ -29,11 +30,26 @@ namespace FlowMeter
 
         private string strBuffer = "";
 
+        private enum TimerMode
+        {
+            NONE,
+            STARTED_EXTERNAL_VOLUME,
+            STARTED_FLOW_RATE
+        }
+        private TimerMode timerMode = TimerMode.NONE;
+
         public MainWindow()
         {
             InitializeComponent();
 
+            // initialize values of controls
             lblPortName.Content = SettingsManager.getInstance().CurrentSettings.SerialConfig.PortName;
+
+            // start the timer
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Tick += TimerTick;
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Start();
         }
 
         private void OnRs232Settings(object sender, RoutedEventArgs e)
@@ -133,6 +149,7 @@ namespace FlowMeter
                     case "@16":
                         txtStrayTotal.Text = strValue;
                         break;
+                    // calculate external volume
                     case "@01":
                         startedExternalVolume();
                         break;
@@ -141,15 +158,18 @@ namespace FlowMeter
                             "The GBR3B is currently performing another operation.",
                             "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
                         break;
+                    case "@0A":
+                        readyExternalVolume();
+                        break;
+                    // calculate flow rate
                     case "@00":
-                        startedFlowRate();
+                        startedOrCompletedFlowRate();
                         break;
                     case "=00":
                         MessageBox.Show("Command is inappropriate.\n" +
                             "The GBR3B is currently performing another operation or the external volume has not been calculated yet.",
                             "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
                         break;
-
                 }
             }));
 
@@ -388,12 +408,29 @@ namespace FlowMeter
 
         private void startedExternalVolume()
         {
-            throw new NotImplementedException();
+            timerMode = TimerMode.STARTED_EXTERNAL_VOLUME;
         }
 
-        private void startedFlowRate()
+        private void startedOrCompletedFlowRate()
         {
-            throw new NotImplementedException();
+            timerMode = TimerMode.STARTED_FLOW_RATE;
+        }
+
+        private void TimerTick(object sender, EventArgs e)
+        {
+            if (timerMode == TimerMode.STARTED_FLOW_RATE)
+            {
+                sendToSerial("@20?\r\n");
+            }
+            else if (timerMode == TimerMode.STARTED_FLOW_RATE)
+            {
+                sendToSerial("@20?\r\n");
+            }
+        }
+
+        private void readyExternalVolume()
+        {
+            
         }
     }
 }
