@@ -17,7 +17,7 @@ namespace Ald.SerialPort.Configuration
             get { return serial; }
         }
 
-        public string LastSent { get; private set; }
+        public string LastSent { get; private set; } = "";
 
         public event Ports.SerialErrorReceivedEventHandler ErrorReceived;
         public event Ports.SerialDataReceivedEventHandler DataReceived;
