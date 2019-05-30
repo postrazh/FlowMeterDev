@@ -109,7 +109,7 @@ namespace FlowMeter
 
             // extract the command
             string command = strFull.Substring(0, 3);
-            string strValue = strFull.Substring(3).TrimEnd('\r', '\n');
+            string strValue = strFull.Substring(3).TrimStart('+').TrimEnd('\r', '\n');
 
             this.Dispatcher.Invoke(new Action(delegate
             {
@@ -252,7 +252,7 @@ namespace FlowMeter
 
         private void BtnWriteStray_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@16" + txtStrayTotal.Text + "\r\n");
+            sendToSerial("@16" + ToOneDecimal(txtStrayTotal.Text) + "\r\n");
         }
 
         private void BtnReadMaxPressure_Click(object sender, RoutedEventArgs e)
@@ -313,6 +313,14 @@ namespace FlowMeter
         private void BtnWriteBasePressure_Click(object sender, RoutedEventArgs e)
         {
             sendToSerial("@40" + txtBasePressure.Text + "\r\n");
+        }
+
+        private string ToOneDecimal(string strValue)
+        {
+            double value = Convert.ToDouble(strValue);
+            value = Math.Round(value, 1);
+            string retVal = value.ToString("0.0");
+            return retVal;
         }
 
         private void TglP5a_Checked(object sender, RoutedEventArgs e)
