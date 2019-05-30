@@ -26,7 +26,7 @@ namespace FlowMeter.View
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            if (pwdExternal.Password != "ab")
+            if (pwdExternal.Password != "016775013")
             {
                 MessageBox.Show("Invalid password!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

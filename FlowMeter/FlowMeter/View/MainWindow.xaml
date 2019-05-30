@@ -6,7 +6,7 @@
 				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				xmlns:local="clr-namespace:FlowMeter"
 				mc:Ignorable="d"
-				Title="Flow Meter" Height="580" Width="1020" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1020" MinHeight="580" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
+				Title="Flow Meter" Height="600" Width="1020" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1020" MinHeight="600" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
