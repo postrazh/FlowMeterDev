@@ -154,9 +154,7 @@ namespace FlowMeter
                         startedExternalVolume();
                         break;
                     case "=01":
-                        MessageBox.Show("Command is inappropriate.\n" +
-                            "The GBR3B is currently performing another operation.",
-                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                        failedToStartExternalVolume();
                         break;
                     case "@0A":
                         readyExternalVolume();
@@ -169,9 +167,7 @@ namespace FlowMeter
                         startedOrCompletedFlowRate();
                         break;
                     case "=00":
-                        MessageBox.Show("Command is inappropriate.\n" +
-                            "The GBR3B is currently performing another operation or the external volume has not been calculated yet.",
-                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                        failedToStartFlowRate();
                         break;
                     case "@21":
                         lblFlowValue.Content = strValue;
@@ -450,6 +446,17 @@ namespace FlowMeter
             progressExternal.Visibility = Visibility.Visible;
         }
 
+        private void failedToStartExternalVolume()
+        {
+            lblExternalStatus.Content = "---";
+            progressExternal.Visibility = Visibility.Hidden;
+            btnExternalStart.IsEnabled = true;
+
+            MessageBox.Show("Command is inappropriate.\n" +
+                            "The GBR3B is currently performing another operation.",
+                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
         private void readyExternalVolume()
         {
             calcMode = CalcMode.NONE;
@@ -475,7 +482,7 @@ namespace FlowMeter
         {
             if (calcMode == CalcMode.NONE)
             {
-                if (!sendToSerial("@00?\r\n"))
+                if (!sendToSerial("@00\r\n"))
                     return;
 
                 lblFlowStatus.Content = "Starting...";
@@ -505,6 +512,17 @@ namespace FlowMeter
 
                 sendToSerial("@21?\r\n");                       // ask the flow rate
             }
+        }
+
+        private void failedToStartFlowRate()
+        {
+            lblFlowStatus.Content = "---";
+            progressFlow.Visibility = Visibility.Hidden;
+            btnFlowStart.IsEnabled = true;
+
+            MessageBox.Show("Command is inappropriate.\n" +
+                            "The GBR3B is currently performing another operation or the external volume has not been calculated yet.",
+                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
