@@ -426,7 +426,7 @@ namespace FlowMeter
 
             if (calcMode == CalcMode.NONE)
             {
-                if (!sendToSerial("@01?\r\n"))
+                if (!sendToSerial("@01\r\n"))
                     return;
 
                 lblExternalStatus.Content = "Starting...";
