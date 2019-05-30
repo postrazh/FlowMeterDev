@@ -82,6 +82,7 @@ namespace FlowMeter
 
         private void serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            // accumulate the recevied string
             string strReceived = serial.Serial.ReadExisting();
             string strFull = "";
             if (strReceived.Contains('\r'))
@@ -95,6 +96,17 @@ namespace FlowMeter
                 return;
             }
 
+            // log to rich textbox
+            this.Dispatcher.Invoke(new Action(delegate
+            {
+                this.richTxtConsole.AppendText(strFull);
+                this.richTxtConsole.ScrollToEnd();
+            }));
+
+            // check the validaity
+            if (strFull[0] != '@')
+                return;
+
             string command = "";
             if (serial.LastSent.Length >= 3)
                 command = serial.LastSent.Substring(0, 3);
@@ -103,7 +115,7 @@ namespace FlowMeter
 
             if (command == "@10")
             {
-                string strValue = strFull.Substring(1);
+                string strValue = strFull.Substring(3);
                 strValue = strValue.TrimEnd('\r', '\n');
 
                 Debug.WriteLine("Value: " + strValue);
@@ -113,12 +125,6 @@ namespace FlowMeter
                     txtMaxPressure.Text = strValue;
                 }));
             }
-
-            this.Dispatcher.Invoke(new Action(delegate
-            {
-                this.richTxtConsole.AppendText(strReceived); // "\n" + 
-                this.richTxtConsole.ScrollToEnd();
-            }));            
         }
 
         private void TglConnect_Unchecked(object sender, RoutedEventArgs e)
