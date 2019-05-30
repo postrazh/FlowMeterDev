@@ -103,9 +103,6 @@ namespace FlowMeter
                 this.richTxtConsole.ScrollToEnd();
             }));
 
-            // check the validaity
-            if (strFull[0] != '@')
-                return;
 
             // extract the command
             string command = strFull.Substring(0, 3);
@@ -136,6 +133,23 @@ namespace FlowMeter
                     case "@16":
                         txtStrayTotal.Text = strValue;
                         break;
+                    case "@01":
+                        startedExternalVolume();
+                        break;
+                    case "=01":
+                        MessageBox.Show("Command is inappropriate.\n" +
+                            "The GBR3B is currently performing another operation.",
+                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+                    case "@00":
+                        startedFlowRate();
+                        break;
+                    case "=00":
+                        MessageBox.Show("Command is inappropriate.\n" +
+                            "The GBR3B is currently performing another operation or the external volume has not been calculated yet.",
+                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+
                 }
             }));
 
@@ -207,27 +221,6 @@ namespace FlowMeter
         private void Window_ContentRendered(object sender, EventArgs e)
         {
             SumupStrayVolume();
-        }
-
-        private void BtnCalculateExternal_Click(object sender, RoutedEventArgs e)
-        {
-            PasswordInput passwordInput = new PasswordInput();
-            passwordInput.Owner = this;
-            if (passwordInput.ShowDialog() == true)
-            {
-                Debug.WriteLine("Changed the serial port configuration.");
-            }
-        }
-
-        private void BtnCalculateFlow_Click(object sender, RoutedEventArgs e)
-        {
-            if (serial == null || serial.Serial.IsOpen == false)
-            {
-                return;
-            }
-
-            sendToSerial("Hello\r\n");
-            sendToSerial("@01?\r\n");
         }
 
         private void sendToSerial(string strData)
@@ -376,6 +369,31 @@ namespace FlowMeter
         private void TglStrayExtra_Unchecked(object sender, RoutedEventArgs e)
         {
             SumupStrayVolume();
+        }
+
+        private void BtnCalculateExternal_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordInput passwordInput = new PasswordInput();
+            passwordInput.Owner = this;
+            if (passwordInput.ShowDialog() == true)
+            {
+                Debug.WriteLine("Changed the serial port configuration.");
+            }
+        }
+
+        private void BtnCalculateFlow_Click(object sender, RoutedEventArgs e)
+        {
+            sendToSerial("@40?\r\n");
+        }
+
+        private void startedExternalVolume()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void startedFlowRate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

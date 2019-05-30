@@ -369,7 +369,7 @@
                     <Border Grid.Row="2" Background="White" Padding="10">
                         <StackPanel >
 
-                            <Button x:Name="btnCalculateExternalVolume" Content="External Volume" Height="Auto" Click="BtnCalculateFlow_Click" Margin="5,0" />
+                            <Button x:Name="btnCalculateExternalVolume" Content="External Volume" Height="Auto" Margin="5,0" />
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal">
