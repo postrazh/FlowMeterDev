@@ -470,13 +470,13 @@ namespace FlowMeter
         {
             lblExternalStatus.Content = "Continue";
             btnExternalStop.Visibility = Visibility.Collapsed;
+            sendToSerial("@04\r\n");
         }
 
         private void continueExternalVolume()
         {
             lblExternalStatus.Content = "Success";
             btnExternalStart.IsEnabled = true;
-            sendToSerial("@04\r\n");
         }
 
         private void BtnFlowStart_Click(object sender, RoutedEventArgs e)
