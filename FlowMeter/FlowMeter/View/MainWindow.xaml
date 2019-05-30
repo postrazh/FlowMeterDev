@@ -367,9 +367,9 @@
                         <Label Content="External Volume" FontSize="14" />
 
                         <Button x:Name="btnCalculateExternalVolume" Content="Start" Height="25" Margin="5,5,5,0" Width="120" FontSize="12" />
-                        <Button Content="Monitoring..." Margin="5,5,5,0" Height="25" Width="120" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" FontSize="12" />
-                        <Button Content="Stop gas flow" Margin="5,5,5,0" Height="25" Width="120" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" FontSize="12" />
-                        <Button Content="Continue" Margin="5,5,5,0" Height="25" Width="120" materialDesign:ButtonProgressAssist.Value="-1" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" FontSize="12" />
+                        <Button Content="Monitoring..." Margin="5,5,5,0" Height="25" Width="120" FontSize="12" Background="#FF9EA0A2" BorderBrush="#FF919293" />
+                        <Button Content="Stop gas flow" Margin="5,5,5,0" Height="25" Width="120" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" FontSize="12" />
+                        <Button Content="Continue" Margin="5,5,5,0" Height="25" Width="120"  materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" FontSize="12" />
                         <StackPanel Height="25" Orientation="Horizontal">
                             <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="85" HorizontalContentAlignment="Right"/>
                             <Label Content="000" HorizontalContentAlignment="Center" Width="73"/>
