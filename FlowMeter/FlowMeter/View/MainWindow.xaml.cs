@@ -82,10 +82,18 @@ namespace FlowMeter
         {
             string strReceived = serial.Serial.ReadExisting();
 
-            if (serial.LastSent.Length >= 3 && serial.LastSent.Substring(0, 3) == "@10")
+            string command = "";
+            if (serial.LastSent.Length >= 3)
+                command = serial.LastSent.Substring(0, 3);
+
+            Debug.WriteLine("Received: " + strReceived);
+
+            if (command == "@10")
             {
                 string strValue = strReceived.Substring(1);
                 strValue = strValue.TrimEnd('\r', '\n');
+
+                Debug.WriteLine("Value: " + strValue);
 
                 this.Dispatcher.Invoke(new Action(delegate
                 {
