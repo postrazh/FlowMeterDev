@@ -25,7 +25,9 @@ namespace FlowMeter
     /// </summary>
     public partial class MainWindow : Window
     {
-        ALDSerialPort serial;
+        private ALDSerialPort serial;
+
+        private string strBuffer = "";
 
         public MainWindow()
         {
@@ -81,16 +83,27 @@ namespace FlowMeter
         private void serial_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             string strReceived = serial.Serial.ReadExisting();
+            string strFull = "";
+            if (strReceived.Contains('\r'))
+            {
+                strFull = strBuffer + strReceived;
+                strBuffer = "";
+            }
+            else
+            {
+                strBuffer += strReceived;
+                return;
+            }
 
             string command = "";
             if (serial.LastSent.Length >= 3)
                 command = serial.LastSent.Substring(0, 3);
 
-            Debug.WriteLine("Received: " + strReceived);
+            Debug.WriteLine("Received: " + strFull);
 
             if (command == "@10")
             {
-                string strValue = strReceived.Substring(1);
+                string strValue = strFull.Substring(1);
                 strValue = strValue.TrimEnd('\r', '\n');
 
                 Debug.WriteLine("Value: " + strValue);
