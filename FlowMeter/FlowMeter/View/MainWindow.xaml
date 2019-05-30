@@ -402,7 +402,7 @@
                     <StackPanel Grid.Row="4" Background="White" >
                         <Label Content="Troubleshoot" FontSize="14" />
 
-                        <Button x:Name="btnContinueGbror" Content="Continue gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" />
+                        <Button x:Name="btnContinueGbror" Content="Continue gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnContinueGbror_Click" />
 
                         
 
