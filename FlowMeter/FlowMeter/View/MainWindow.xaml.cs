@@ -517,7 +517,7 @@ namespace FlowMeter
             }
         }
 
-        private void startedCompletedFlowRate()
+        private void startedFlowRate()
         {
             calcMode = CalcMode.STARTED_FLOW_RATE;
             lblFlowStatus.Content = "Monitoring...";
@@ -550,9 +550,9 @@ namespace FlowMeter
             sendToSerial("@04\r\n");
         }
 
-        private void BtnCancelGbror_Click(object sender, RoutedEventArgs e)
+        private void BtnAbortGbror_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@05\r\n");
         }
     }
 }

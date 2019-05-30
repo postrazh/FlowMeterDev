@@ -6,7 +6,7 @@
 				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				xmlns:local="clr-namespace:FlowMeter"
 				mc:Ignorable="d"
-				Title="Flow Meter" Height="578.8" Width="1020" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1020" MinHeight="550" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
+				Title="Flow Meter" Height="580" Width="1020" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1020" MinHeight="580" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -407,7 +407,7 @@
                     <StackPanel Grid.Row="4" Background="White" >
                         <Label Content="Troubleshoot" FontSize="14" />
 
-                        <Button x:Name="btnCancelGbror" Content="Cancel gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" />
+                        <Button x:Name="btnAbortGbror" Content="Abort gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnAbortGbror_Click" />
                         <Button x:Name="btnContinueGbror" Content="Continue gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnContinueGbror_Click" />                        
 
                         <Border BorderBrush="{DynamicResource MaterialDesignDivider}" Height="10" BorderThickness="0,0,0,1"/>
