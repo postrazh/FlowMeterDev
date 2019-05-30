@@ -376,6 +376,11 @@
                             <ProgressBar x:Name="progressExternal" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" />
                         </StackPanel>
 
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblExternalValue" Content="---" />
+                        </StackPanel>
+
                         <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1"/>
 
                     </StackPanel>

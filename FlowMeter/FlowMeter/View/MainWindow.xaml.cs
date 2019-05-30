@@ -163,6 +163,9 @@ namespace FlowMeter
                     case "@04":
                         continueExternalVolume();
                         break;
+                    case "@23":
+                        reportExternalVolume(strValue);
+                        break;
                     // calculate flow rate
                     case "@00":
                         startedOrCompletedFlowRate();
@@ -470,13 +473,29 @@ namespace FlowMeter
         {
             lblExternalStatus.Content = "Continue";
             btnExternalStop.Visibility = Visibility.Collapsed;
+            btnExternalStart.IsEnabled = true;
+
             sendToSerial("@04\r\n");
         }
 
         private void continueExternalVolume()
         {
-            lblExternalStatus.Content = "Success";
-            btnExternalStart.IsEnabled = true;
+            sendToSerial("@23?\r\n");
+        }
+
+        private void reportExternalVolume(string strValue)
+        {
+            double value = Convert.ToDouble(strValue);
+            if (value < 0)
+            {
+                lblExternalStatus.Content = "Fail";
+                lblExternalValue.Content = "---";
+            }
+            else
+            {
+                lblExternalStatus.Content = "Success";
+                lblExternalValue.Content = strValue;
+            }
         }
 
         private void BtnFlowStart_Click(object sender, RoutedEventArgs e)
