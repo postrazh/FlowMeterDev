@@ -159,6 +159,8 @@ namespace FlowMeter
                     case "@20":
                         if (strValue == "0A")
                             readyExternalVolume();
+                        else if (strValue == "00")
+                            completedFlowRate();
                         break;
                     case "@04":
                         continueExternalVolume();
@@ -168,7 +170,7 @@ namespace FlowMeter
                         break;
                     // calculate flow rate
                     case "@00":
-                        startedOrCompletedFlowRate();
+                        startedFlowRate();
                         break;
                     case "=00":
                         failedToStartFlowRate();
@@ -515,23 +517,21 @@ namespace FlowMeter
             }
         }
 
-        private void startedOrCompletedFlowRate()
+        private void startedCompletedFlowRate()
         {
-            if (calcMode == CalcMode.NONE)                      // started
-            {
-                calcMode = CalcMode.STARTED_FLOW_RATE;
-                lblFlowStatus.Content = "Monitoring...";
-                progressFlow.Visibility = Visibility.Visible;
-            }
-            else if (calcMode == CalcMode.STARTED_FLOW_RATE)    // completed
-            {
-                calcMode = CalcMode.NONE;
-                lblFlowStatus.Content = "Success";
-                progressFlow.Visibility = Visibility.Hidden;
-                btnFlowStart.IsEnabled = true;
+            calcMode = CalcMode.STARTED_FLOW_RATE;
+            lblFlowStatus.Content = "Monitoring...";
+            progressFlow.Visibility = Visibility.Visible;
+        }
 
-                sendToSerial("@21?\r\n");                       // ask the flow rate
-            }
+        private void completedFlowRate()
+        {
+            calcMode = CalcMode.NONE;
+            lblFlowStatus.Content = "Success";
+            progressFlow.Visibility = Visibility.Hidden;
+            btnFlowStart.IsEnabled = true;
+
+            sendToSerial("@21?\r\n");                       // ask the flow rate
         }
 
         private void failedToStartFlowRate()
@@ -548,6 +548,11 @@ namespace FlowMeter
         private void BtnContinueGbror_Click(object sender, RoutedEventArgs e)
         {
             sendToSerial("@04\r\n");
+        }
+
+        private void BtnCancelGbror_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
