@@ -156,8 +156,9 @@ namespace FlowMeter
                     case "=01":
                         failedToStartExternalVolume();
                         break;
-                    case "@0A":
-                        readyExternalVolume();
+                    case "@20":
+                        if (strValue == "0A")
+                            readyExternalVolume();
                         break;
                     case "@04":
                         continueExternalVolume();
