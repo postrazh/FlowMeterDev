@@ -361,6 +361,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Margin="10" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"><Run FontSize="21.75" Text="Calculate"/></TextBlock>
                     <StackPanel Grid.Row="2" Background="White" >
@@ -398,7 +399,16 @@
 
                     </StackPanel>
 
+                    <StackPanel Grid.Row="4" Background="White" >
+                        <Label Content="Troubleshoot" FontSize="14" />
 
+                        <Button x:Name="btnContinueGbror" Content="Continue gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" />
+
+                        
+
+                        <Border BorderBrush="{DynamicResource MaterialDesignDivider}" Height="10" BorderThickness="0,0,0,1"/>
+
+                    </StackPanel>
 
                 </Grid>
             </materialDesign:Card>

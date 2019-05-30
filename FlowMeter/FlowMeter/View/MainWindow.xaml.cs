@@ -524,5 +524,10 @@ namespace FlowMeter
                             "The GBR3B is currently performing another operation or the external volume has not been calculated yet.",
                             "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        private void BtnContinueGbror_Click(object sender, RoutedEventArgs e)
+        {
+            sendToSerial("@04\r\n");
+        }
     }
 }
