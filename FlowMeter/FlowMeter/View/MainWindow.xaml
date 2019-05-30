@@ -366,13 +366,13 @@
                     <StackPanel Grid.Row="2" Background="White" >
                         <Label Content="External Volume" FontSize="14" />
 
-                        <Button x:Name="btnCalculateExternalVolume" Content="Start" Height="25" Margin="5,5,5,0" Width="120" FontSize="12" />
-                        <Button Content="Monitoring..." Margin="5,5,5,0" Height="25" Width="120" FontSize="12" Background="#FF9EA0A2" BorderBrush="#FF919293" />
-                        <Button Content="Stop gas flow" Margin="5,5,5,0" Height="25" Width="120" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" FontSize="12" />
-                        <Button Content="Continue" Margin="5,5,5,0" Height="25" Width="120"  materialDesign:ButtonProgressAssist.IsIndicatorVisible="True" materialDesign:ButtonProgressAssist.IsIndeterminate="True" FontSize="12" />
-                        <StackPanel Height="25" Orientation="Horizontal">
-                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="85" HorizontalContentAlignment="Right"/>
-                            <Label Content="000" HorizontalContentAlignment="Center" Width="73"/>
+                        <Button x:Name="btnExternalStart" Content="Start" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnExternalStart_Click"/>
+                        <Button x:Name="btnExternalStop" Content="Stop the gas flow" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+    materialDesign:ButtonProgressAssist.IsIndeterminate="True" Click="BtnExternalStop_Click" Visibility="Collapsed" />
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Status :" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblExternalStatus" Content="---" />
+                            <ProgressBar x:Name="progressExternal" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" />
                         </StackPanel>
 
                         <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1"/>
@@ -381,10 +381,17 @@
                     <StackPanel Grid.Row="3" Background="White" >
                         <Label Content="Flow Rate" FontSize="14" />
 
-                        <Button Content="Start" Height="25" Margin="5,5,5,0" Width="120" FontSize="12" />
-                        <StackPanel Height="25" Orientation="Horizontal">
-                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="85" HorizontalContentAlignment="Right"/>
-                            <Label Content="000" HorizontalContentAlignment="Center" Width="73"/>
+                        <Button x:Name="btnFlowStart" Content="Start" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnFlowStart_Click"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Status :" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblFlowStatus" Content="---" />
+                            <ProgressBar x:Name="progressFlow" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblFlowValue" Content="---" />
                         </StackPanel>
 
                         <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1"/>

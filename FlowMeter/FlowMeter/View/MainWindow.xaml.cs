@@ -30,13 +30,13 @@ namespace FlowMeter
 
         private string strBuffer = "";
 
-        private enum TimerMode
+        private enum CalcMode
         {
             NONE,
             STARTED_EXTERNAL_VOLUME,
             STARTED_FLOW_RATE
         }
-        private TimerMode timerMode = TimerMode.NONE;
+        private CalcMode calcMode = CalcMode.NONE;
 
         public MainWindow()
         {
@@ -161,6 +161,9 @@ namespace FlowMeter
                     case "@0A":
                         readyExternalVolume();
                         break;
+                    case "@04":
+                        continueExternalVolume();
+                        break;
                     // calculate flow rate
                     case "@00":
                         startedOrCompletedFlowRate();
@@ -169,6 +172,9 @@ namespace FlowMeter
                         MessageBox.Show("Command is inappropriate.\n" +
                             "The GBR3B is currently performing another operation or the external volume has not been calculated yet.",
                             "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+                    case "@21":
+                        lblFlowValue.Content = strValue;
                         break;
                 }
             }));
@@ -243,12 +249,12 @@ namespace FlowMeter
             SumupStrayVolume();
         }
 
-        private void sendToSerial(string strData)
+        private bool sendToSerial(string strData)
         {
             if (serial == null || serial.Serial.IsOpen == false)
             {
                 MessageBox.Show("Serial Port is not opened!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false; 
             }
             serial.SendData(strData);
 
@@ -256,6 +262,8 @@ namespace FlowMeter
             append = ">> ";
             append += strData;
             richTxtConsole.AppendText(append);
+
+            return true;
         }
 
         private void BtnReadStray_Click(object sender, RoutedEventArgs e)
@@ -391,46 +399,112 @@ namespace FlowMeter
             SumupStrayVolume();
         }
 
-        private void BtnCalculateExternal_Click(object sender, RoutedEventArgs e)
-        {
-            PasswordInput passwordInput = new PasswordInput();
-            passwordInput.Owner = this;
-            if (passwordInput.ShowDialog() == true)
-            {
-                Debug.WriteLine("Changed the serial port configuration.");
-            }
-        }
-
         private void BtnCalculateFlow_Click(object sender, RoutedEventArgs e)
         {
             sendToSerial("@40?\r\n");
         }
 
-        private void startedExternalVolume()
-        {
-            timerMode = TimerMode.STARTED_EXTERNAL_VOLUME;
-        }
+        
 
-        private void startedOrCompletedFlowRate()
-        {
-            timerMode = TimerMode.STARTED_FLOW_RATE;
-        }
 
         private void TimerTick(object sender, EventArgs e)
         {
-            if (timerMode == TimerMode.STARTED_FLOW_RATE)
+            if (calcMode == CalcMode.STARTED_EXTERNAL_VOLUME)
             {
                 sendToSerial("@20?\r\n");
             }
-            else if (timerMode == TimerMode.STARTED_FLOW_RATE)
+            else if (calcMode == CalcMode.STARTED_FLOW_RATE)
             {
                 sendToSerial("@20?\r\n");
             }
+        }
+
+        private void BtnExternalStart_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordInput passwordInput = new PasswordInput();
+            passwordInput.Owner = this;
+            if (passwordInput.ShowDialog() != true)
+            {
+                return;
+            }
+
+            if (calcMode == CalcMode.NONE)
+            {
+                if (!sendToSerial("@01?\r\n"))
+                    return;
+
+                lblExternalStatus.Content = "Starting...";
+                progressExternal.Visibility = Visibility.Visible;
+                btnExternalStart.IsEnabled = false;
+            }
+            else
+            {
+                MessageBox.Show("Can not start!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void startedExternalVolume()
+        {
+            calcMode = CalcMode.STARTED_EXTERNAL_VOLUME;
+            lblExternalStatus.Content = "Monitoring...";
+            progressExternal.Visibility = Visibility.Visible;
         }
 
         private void readyExternalVolume()
         {
-            
+            calcMode = CalcMode.NONE;
+            lblExternalStatus.Content = "Waiting to stop";
+            btnExternalStop.Visibility = Visibility.Visible;
+            progressExternal.Visibility = Visibility.Hidden;
+        }
+
+        private void BtnExternalStop_Click(object sender, RoutedEventArgs e)
+        {
+            lblExternalStatus.Content = "Continue";
+            btnExternalStop.Visibility = Visibility.Collapsed;
+        }
+
+        private void continueExternalVolume()
+        {
+            lblExternalStatus.Content = "Success";
+            btnExternalStart.IsEnabled = true;
+            sendToSerial("@04\r\n");
+        }
+
+        private void BtnFlowStart_Click(object sender, RoutedEventArgs e)
+        {
+            if (calcMode == CalcMode.NONE)
+            {
+                if (!sendToSerial("@00?\r\n"))
+                    return;
+
+                lblFlowStatus.Content = "Starting...";
+                progressFlow.Visibility = Visibility.Visible;
+                btnFlowStart.IsEnabled = false;
+            }
+            else
+            {
+                MessageBox.Show("Can not start!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void startedOrCompletedFlowRate()
+        {
+            if (calcMode == CalcMode.NONE)                      // started
+            {
+                calcMode = CalcMode.STARTED_FLOW_RATE;
+                lblFlowStatus.Content = "Monitoring...";
+                progressFlow.Visibility = Visibility.Visible;
+            }
+            else if (calcMode == CalcMode.STARTED_FLOW_RATE)    // completed
+            {
+                calcMode = CalcMode.NONE;
+                lblFlowStatus.Content = "Success";
+                progressFlow.Visibility = Visibility.Hidden;
+                btnFlowStart.IsEnabled = true;
+
+                sendToSerial("@21?\r\n");                       // ask the flow rate
+            }
         }
     }
 }
