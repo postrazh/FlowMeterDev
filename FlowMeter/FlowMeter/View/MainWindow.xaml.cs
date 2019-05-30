@@ -107,24 +107,38 @@ namespace FlowMeter
             if (strFull[0] != '@')
                 return;
 
-            string command = "";
-            if (serial.LastSent.Length >= 3)
-                command = serial.LastSent.Substring(0, 3);
+            // extract the command
+            string command = strFull.Substring(0, 3);
+            string strValue = strFull.Substring(3).TrimEnd('\r', '\n');
 
-            Debug.WriteLine("Received: " + strFull);
-
-            if (command == "@10")
+            this.Dispatcher.Invoke(new Action(delegate
             {
-                string strValue = strFull.Substring(3);
-                strValue = strValue.TrimEnd('\r', '\n');
-
-                Debug.WriteLine("Value: " + strValue);
-
-                this.Dispatcher.Invoke(new Action(delegate
+                switch (command)
                 {
-                    txtMaxPressure.Text = strValue;
-                }));
-            }
+                    case "@10":
+                        txtMaxPressure.Text = strValue;
+                        break;
+                    case "@11":
+                        txtTimeout.Text = strValue;
+                        break;
+                    case "@14":
+                        txtMinPressure.Text = strValue;
+                        break;
+                    case "@17":
+                        txtPurgeCycles.Text = strValue;
+                        break;
+                    case "@18":
+                        txtStabilizationTime.Text = strValue;
+                        break;
+                    case "@40":
+                        txtBasePressure.Text = strValue;
+                        break;
+                    case "@16":
+                        txtStrayTotal.Text = strValue;
+                        break;
+                }
+            }));
+
         }
 
         private void TglConnect_Unchecked(object sender, RoutedEventArgs e)
@@ -188,67 +202,6 @@ namespace FlowMeter
             }
 
             txtStrayTotal.Text = totalStray.ToString();
-
-            // render image
-            RenderStrayVolume();
-        }
-
-
-        private void RenderStrayVolume()
-        {
-
-            double offset = 0;
-
-            //// pipe 101
-            //if (tglPipe101.IsChecked ?? false)
-            //{
-            //    stackPipe101.Visibility = Visibility.Visible;
-            //    offset -= 97;
-            //}
-            //else
-            //{
-            //    stackPipe101.Visibility = Visibility.Hidden;     
-            //}
-            //Canvas.SetLeft(stackPipe101, 12 + offset);
-
-            //// pipe 102
-            //if (tglPipe102.IsChecked ?? false)
-            //{
-            //    stackPipe102.Visibility = Visibility.Visible;
-            //    offset -= 75;
-            //}
-            //else
-            //{
-            //    stackPipe102.Visibility = Visibility.Hidden;
-            //}
-            //Canvas.SetLeft(stackPipe102, 12 + offset);
-
-            //// pipe 103
-            //if (tglPipe103.IsChecked ?? false)
-            //{
-            //    stackPipe103.Visibility = Visibility.Visible;
-            //    offset -= 75;
-            //}
-            //else
-            //{
-            //    stackPipe103.Visibility = Visibility.Hidden;
-            //}
-            //Canvas.SetLeft(stackPipe103, 12 + offset);
-
-            // pipe extra
-            //if (tglPipeExtra.IsChecked ?? false)
-            //{
-            //    stackPipeExtra.Visibility = Visibility.Visible;
-            //    offset -= 48;
-            //}
-            //else
-            //{
-            //    stackPipeExtra.Visibility = Visibility.Hidden;
-            //}
-            //Canvas.SetLeft(stackPipeExtra, 12 + offset);
-
-            //// image mfc
-            //Canvas.SetLeft(imgMfc, -70 + offset);
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
@@ -294,12 +247,12 @@ namespace FlowMeter
 
         private void BtnReadStray_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@16?\r\n");
         }
 
         private void BtnWriteStray_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@16" + txtStrayTotal.Text + "\r\n");
         }
 
         private void BtnReadMaxPressure_Click(object sender, RoutedEventArgs e)
@@ -319,7 +272,7 @@ namespace FlowMeter
 
         private void BtnWriteTimeout_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@11" + txtTimeout.Text + "\r\n");
         }
 
         private void BtnReadMinPressure_Click(object sender, RoutedEventArgs e)
@@ -329,7 +282,7 @@ namespace FlowMeter
 
         private void BtnWriteMinPressure_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@14" + txtMinPressure.Text + "\r\n");
         }
 
         private void BtnReadPurgeCycles_Click(object sender, RoutedEventArgs e)
@@ -339,7 +292,7 @@ namespace FlowMeter
 
         private void BtnWritePurgeCycles_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@17" + txtPurgeCycles.Text + "\r\n");
         }
 
         private void BtnReadStabilizationTime_Click(object sender, RoutedEventArgs e)
@@ -349,7 +302,7 @@ namespace FlowMeter
 
         private void BtnWriteStabilizationTime_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@18" + txtStabilizationTime.Text + "\r\n");
         }
 
         private void BtnReadBasePressure_Click(object sender, RoutedEventArgs e)
@@ -359,7 +312,7 @@ namespace FlowMeter
 
         private void BtnWriteBasePressure_Click(object sender, RoutedEventArgs e)
         {
-
+            sendToSerial("@40" + txtBasePressure.Text + "\r\n");
         }
 
         private void TglP5a_Checked(object sender, RoutedEventArgs e)
