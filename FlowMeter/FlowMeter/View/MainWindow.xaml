@@ -80,7 +80,7 @@
 
                     <StackPanel x:Name="stackAsset100" Orientation="Vertical" Canvas.Top="93" Width="82" Canvas.Left="26">
                         <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="13,0,-12.4,0"/>
-                        <Label Content="Asset100" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <Label Content="Asset101" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                             <Label.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -94,7 +94,7 @@
 
                     <StackPanel x:Name="stackAsset105" Orientation="Vertical" Canvas.Top="93" Width="82" Canvas.Left="-38">
                         <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                        <Label Content="Asset105" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <Label Content="Asset112" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                             <Label.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -108,7 +108,7 @@
 
                     <StackPanel x:Name="stackAsset1498" Orientation="Vertical" Canvas.Top="93" Width="82" Canvas.Left="-115">
                         <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                        <Label Content="Asset1498" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <Label Content="Asset136" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                             <Label.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -122,7 +122,7 @@
 
                     <StackPanel x:Name="stackAsset1500" Orientation="Vertical" Canvas.Top="93" Width="82" Canvas.Left="-192">
                         <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                        <Label Content="Asset1500" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <Label Content="Asset124" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                             <Label.RenderTransform>
                                 <TransformGroup>
                                     <ScaleTransform/>
@@ -195,29 +195,29 @@
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset100" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset100" Content="0.05" HorizontalContentAlignment="Right" Width="50"/>
+                                    <Label Content="Asset101" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset100" Content="0.473" HorizontalContentAlignment="Right" Width="50"/>
                                 </StackPanel>
                             </Border>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset105" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset105" Content="1.2368" HorizontalContentAlignment="Right" Width="50"/>
+                                    <Label Content="Asset112" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset105" Content="9.181" HorizontalContentAlignment="Right" Width="50"/>
                                 </StackPanel>
                             </Border>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset1498" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset1498" Content="22.112" HorizontalContentAlignment="Right" Width="50"/>
+                                    <Label Content="Asset136" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset1498" Content="27.651" HorizontalContentAlignment="Right" Width="50"/>
                                 </StackPanel>
                             </Border>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset1500" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset1500" Content="0.93" HorizontalContentAlignment="Right" Width="50"/>
+                                    <Label Content="Asset124" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset1500" Content="18.434" HorizontalContentAlignment="Right" Width="50"/>
                                 </StackPanel>
                             </Border>
 
