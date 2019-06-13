@@ -6,7 +6,7 @@
 				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				xmlns:local="clr-namespace:FlowMeter"
 				mc:Ignorable="d"
-				Title="Flow Meter" Height="550" Width="1020" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1020" MinHeight="550" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
+				Title="Flow Meter" Height="600" Width="1020" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1020" MinHeight="600" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -362,53 +362,65 @@
                 </Grid>
             </materialDesign:Card>
 
-            <materialDesign:Card Grid.Column="3" Background="#FF0F961F" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="15,5,15,0" MinWidth="100" Height="196">
+            <materialDesign:Card Grid.Column="3" Background="#FF0F961F" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="15,5,15,0" MinWidth="100">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Margin="45,10,0,9.8" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center"><Run FontSize="21.75" Text="Calculate"/></TextBlock>
+                    <TextBlock Grid.Row="0" Margin="10" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center"><Run FontSize="21.75" Text="Calculate"/></TextBlock>
+                    <StackPanel Grid.Row="2" Background="White" >
+                        <Label Content="External Volume" FontSize="14" />
 
+                        <Button x:Name="btnExternalStart" Content="Start" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnExternalStart_Click"/>
+                        <Button x:Name="btnExternalStop" Content="Stop the gas flow" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+    materialDesign:ButtonProgressAssist.IsIndeterminate="True" Click="BtnExternalStop_Click" Visibility="Collapsed" />
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Status :" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblExternalStatus" Content="---" />
+                            <ProgressBar x:Name="progressExternal" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" />
+                        </StackPanel>
 
-
-                    <Border Grid.Row="2" Background="White" Padding="10">
-                        <StackPanel >
-
-                            <Button x:Name="btnCalculateExternalVolume" Content="External Volume" Height="Auto" Click="BtnCalculateFlow_Click" Margin="5,0" />
-
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="80" HorizontalContentAlignment="Right"/>
-                                    <Label Content="000" HorizontalContentAlignment="Center" Width="73"/>
-                                </StackPanel>
-                            </Border>
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblExternalValue" Content="---" />
+                        </StackPanel>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1"/>
 
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Background="White" >
+                        <Label Content="Flow Rate" FontSize="14" />
+
+                        <Button x:Name="btnFlowStart" Content="Start" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnFlowStart_Click"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Status :" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblFlowStatus" Content="---" />
+                            <ProgressBar x:Name="progressFlow" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" />
                         </StackPanel>
-                    </Border>
 
-                    <Border Grid.Row="3" Background="White" Padding="10">
-                        <StackPanel >
-
-                            <Button x:Name="btnCalculateFlowRate" Content="Flow Rate" Height="Auto" Click="BtnCalculateFlow_Click" Margin="5,0" />
-
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="80" HorizontalContentAlignment="Right"/>
-                                    <Label Content="000" HorizontalContentAlignment="Center" Width="73"/>
-                                </StackPanel>
-                            </Border>
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" HorizontalContentAlignment="Right"/>
+                            <Label x:Name="lblFlowValue" Content="---" />
+                        </StackPanel>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1"/>
 
-                        </StackPanel>
-                    </Border>
+                    </StackPanel>
 
+                    <StackPanel Grid.Row="4" Background="White" >
+                        <Label Content="Troubleshoot" FontSize="14" />
 
+                        <Button x:Name="btnAbortGbror" Content="Abort gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnAbortGbror_Click" />
+                        <Button x:Name="btnContinueGbror" Content="Continue gbror" Height="25" Margin="5,2,5,0" Width="130" FontSize="12" Click="BtnContinueGbror_Click" />                        
+
+                        <Border BorderBrush="{DynamicResource MaterialDesignDivider}" Height="10" BorderThickness="0,0,0,1"/>
+
+                    </StackPanel>
 
                 </Grid>
             </materialDesign:Card>
