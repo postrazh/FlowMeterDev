@@ -9,15 +9,15 @@ namespace Ald.SerialPort.Configuration
 {
     public class ALDSerialPort
     {
-        SerialConfiguration config;
-        Ports.SerialPort serial;
+        private SerialConfiguration config;
+        private Ports.SerialPort serial;
 
         public Ports.SerialPort Serial
         {
             get { return serial; }
         }
 
-        public string LastSent { get; private set; } = "";
+        public string LastSent { get; private set; }
 
         public event Ports.SerialErrorReceivedEventHandler ErrorReceived;
         public event Ports.SerialDataReceivedEventHandler DataReceived;
@@ -88,6 +88,8 @@ namespace Ald.SerialPort.Configuration
 
             serial.Open();
             serial.Encoding = System.Text.ASCIIEncoding.ASCII;
+
+            serial.WriteTimeout = 1000;
         }
         public void ClosePort()
         {
@@ -129,10 +131,20 @@ namespace Ald.SerialPort.Configuration
             LastSent = data;
             try
             {
-                serial.Write(data);
-                return true;
+                if (serial.IsOpen)
+                {
+                    serial.Write(data);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            catch (TimeoutException ex)
+            {
+                return false;
             }
             catch { return false; }
+
         }
     }
 }
