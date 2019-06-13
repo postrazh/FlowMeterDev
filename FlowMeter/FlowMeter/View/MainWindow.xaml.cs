@@ -91,13 +91,13 @@ namespace FlowMeter
         {
             string strReceived = serial.Serial.ReadExisting();
 
-            if (serial.LastSent.Substring(0, 3) == "@10")
-            {
-                txtMaxPressure.Text = strReceived.Substring(3);
-            }
-
             this.Dispatcher.Invoke(new Action(delegate
             {
+                if (serial.LastSent.Substring(0, 3) == "@10")
+                {
+                    txtMaxPressure.Text = strReceived.Substring(3);
+                }
+
                 this.richTxtConsole.AppendText(strReceived); // "\n" + 
                 this.richTxtConsole.ScrollToEnd();
             }));            
