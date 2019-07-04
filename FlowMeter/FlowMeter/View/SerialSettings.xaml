@@ -32,7 +32,7 @@
         <ComboBox x:Name="cmbParity" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" Margin="6.2,6,4.2,6" HorizontalContentAlignment="Center" Height="28" />
         <Label Content="Stop Bits" Grid.Row="5" HorizontalAlignment="Left"   VerticalAlignment="Center" Height="28" Margin="1,6,0,6" Width="64" Grid.Column="1" />
         <ComboBox x:Name="cmbStopBits" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" Margin="6.2,6,4.2,6" HorizontalContentAlignment="Center" Height="28" />
-        <Button Content="Ok" Grid.Column="1" HorizontalAlignment="Left" Margin="26,16,0,0" Grid.Row="6" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="2" Click="OnOk" IsDefault="True"/>
-        <Button Content="Cancel" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Top" Width="75" Margin="47.2,16,0,0" Click="OnCancel" IsCancel="True"/>
+        <Button Content="Ok" Grid.Column="1" HorizontalAlignment="Left" Margin="1,16,0,0" Grid.Row="6" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="OnOk" IsDefault="True" Width="114"/>
+        <Button Content="Cancel" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" Grid.Row="6" VerticalAlignment="Top" Width="114" Margin="41.2,16,0,0" Click="OnCancel" IsCancel="True"/>
     </Grid>
 </Window>

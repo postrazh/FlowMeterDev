@@ -71,6 +71,9 @@
     <Compile Include="View\PasswordInput.xaml.cs">
       <DependentUpon>PasswordInput.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PipeSettings.xaml.cs">
+      <DependentUpon>PipeSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SerialSettings.xaml.cs">
       <DependentUpon>SerialSettings.xaml</DependentUpon>
     </Compile>
@@ -87,6 +90,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\PasswordInput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PipeSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

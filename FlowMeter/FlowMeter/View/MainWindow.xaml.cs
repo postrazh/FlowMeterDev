@@ -72,11 +72,21 @@ namespace FlowMeter
 
         private void OnRs232Settings(object sender, RoutedEventArgs e)
         {
-            SerialSettings serialSettings = new SerialSettings();
-            serialSettings.Owner = this;
-            if (serialSettings.ShowDialog() == true)
+            SerialSettings dlg = new SerialSettings();
+            dlg.Owner = this;
+            if (dlg.ShowDialog() == true)
             {
                 Debug.WriteLine("Changed the serial port configuration.");
+            }
+        }
+
+        private void OnPipeSettings(object sender, RoutedEventArgs e)
+        {
+            PipeSettings dlg = new PipeSettings();
+            dlg.Owner = this;
+            if (dlg.ShowDialog() == true)
+            {
+                Debug.WriteLine("Changed the pipe settings.");
             }
         }
 

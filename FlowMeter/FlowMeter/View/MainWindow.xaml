@@ -6,7 +6,7 @@
 				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				xmlns:local="clr-namespace:FlowMeter"
 				mc:Ignorable="d"
-				Title="Flow Meter" Height="610" Width="1100" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1100" MinHeight="610" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
+				Title="Flow Meter" Height="640" Width="1100" Icon="/FlowMeter;component/Resources/app.ico" MinWidth="1100" MinHeight="640" WindowStartupLocation="CenterScreen" ContentRendered="Window_ContentRendered">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -15,157 +15,160 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold" FontStyle="Italic" Content="Flow Meter" Margin="385,0,385.6,0" />
-        <Grid Margin="0" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="859*"/>
-            </Grid.ColumnDefinitions>
+        <Border Margin="0" Grid.Row="1" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" BorderThickness="0,1,0,0">
+            <Grid Margin="0,0,-0.4,0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="859*"/>
+                </Grid.ColumnDefinitions>
 
-            <materialDesign:Card Background="White" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="0" MinWidth="100" Width="200" VerticalAlignment="Stretch">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Border Background="#FFE6E6E6" BorderBrush="#FFD0CECE" BorderThickness="1">
-                        <TextBlock Grid.Row="0" Margin="10,5" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"><Run FontSize="21.75" Text="RS-232"/></TextBlock>
-                    </Border>
+                <materialDesign:Card Background="White" Foreground="{DynamicResource PrimaryHueDarkForegroundBrush}" Margin="0" MinWidth="100" Width="200" VerticalAlignment="Stretch">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Border Background="#FFE6E6E6" BorderBrush="#FFD0CECE" BorderThickness="1">
+                            <TextBlock Grid.Row="0" Margin="10,5" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"><Run FontSize="21.75" Text="RS-232"/></TextBlock>
+                        </Border>
 
 
-                    <Border Grid.Row="2" Background="White" Padding="10" BorderThickness="1">
-                        <StackPanel >
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Port" HorizontalAlignment="Center" VerticalAlignment="Center" Width="57" Margin="10,0,0,0"/>
-                                    <Label x:Name="lblPortName" Content="COM3" HorizontalContentAlignment="Right" Width="60"/>
-                                </StackPanel>
-                            </Border>
+                        <Border Grid.Row="2" Background="White" Padding="10" BorderThickness="1">
+                            <StackPanel >
+                                <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Port" HorizontalAlignment="Center" VerticalAlignment="Center" Width="57" Margin="10,0,0,0"/>
+                                        <Label x:Name="lblPortName" Content="COM3" HorizontalContentAlignment="Right" Width="60"/>
+                                    </StackPanel>
+                                </Border>
 
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Connect" Width="57" Margin="10,0,0,0"/>
-                                    <ToggleButton x:Name="tglConnect" Width="70" Checked="TglConnect_Checked" Unchecked="TglConnect_Unchecked" />
-                                </StackPanel>
-                            </Border>
+                                <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Connect" Width="57" Margin="10,0,0,0"/>
+                                        <ToggleButton x:Name="tglConnect" Width="70" Checked="TglConnect_Checked" Unchecked="TglConnect_Unchecked" />
+                                    </StackPanel>
+                                </Border>
 
+                            </StackPanel>
+                        </Border>
+
+                        <Button Grid.Row="0" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,10,0" Background="#FFBEBEBE" BorderBrush="#FFB4B4B4" Width="Auto" Height="Auto" Click="OnRs232Settings" Focusable="False">
+                            <materialDesign:PackIcon Kind="GearOutline" Height="20"  Width="20" Focusable="False" />
+                        </Button>
+
+                    </Grid>
+                </materialDesign:Card>
+
+
+
+                <Border Grid.Column="1" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" BorderThickness="0,0,0,1" Height="120">
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFF7F6F6" Offset="0"/>
+                            <GradientStop Color="#FFF6F6F6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <StackPanel HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                        <StackPanel x:Name="stackPipeContainer" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0">
+                            <Image x:Name="imgMfc" HorizontalAlignment="Left" Height="111" VerticalAlignment="Top" Width="66" Source="/FlowMeter;component/Resources/mfc.png" Margin="0,14,-9,0"/>
+                            <StackPanel x:Name="stackExtra" Orientation="Vertical" Width="52" Margin="-1,74,0,1.2">
+                                <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="52" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0"/>
+                                <Label Content="Extra" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform Y="-12"/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                            </StackPanel>
+
+                            <StackPanel x:Name="stackP5a" Orientation="Vertical" Width="81" Margin="-4,74,0,1.2">
+                                <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0,0,-0.2,0" />
+                                <Label x:Name="lblPipeP5a" Content="P5a" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform Y="-12"/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                            </StackPanel>
+
+                            <StackPanel x:Name="stackAsset124" Orientation="Vertical" Width="82" Margin="-5,74,0,1.2">
+                                <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
+                                <Label Content="Asset124" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform Y="-12"/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                            </StackPanel>
+
+                            <StackPanel x:Name="stackAsset136" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
+                                <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
+                                <Label Content="Asset136" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform Y="-12"/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                            </StackPanel>
+
+                            <StackPanel x:Name="stackAsset112" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
+                                <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
+                                <Label Content="Asset112" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform Y="-12"/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                            </StackPanel>
+
+                            <StackPanel x:Name="stackAsset101" Orientation="Vertical" Width="82" Margin="-7,74,0,1.2">
+                                <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0"/>
+                                <Label Content="Asset101" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0">
+                                    <Label.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform Y="-12"/>
+                                        </TransformGroup>
+                                    </Label.RenderTransform>
+                                </Label>
+                            </StackPanel>
+
+                            <Image HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="34" RenderTransformOrigin="1.561,0.467" Source="/FlowMeter;component/Resources/valve.png" Margin="-5,72,0,0"/>
+                            <Image HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="93" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="-7,74,0,0"/>
+
+                            <Image HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="151" Source="/FlowMeter;component/Resources/meter.png" Margin="-18,14,0,0"/>
                         </StackPanel>
-                    </Border>
-
-                    <Button Grid.Row="0" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,10,0" Background="#FFBEBEBE" BorderBrush="#FFB4B4B4" Width="30" Height="30" Click="OnRs232Settings" Focusable="False">
-                        <materialDesign:PackIcon Kind="GearOutline" Height="24"  Width="24" Focusable="False" />
-                    </Button>
-
-                </Grid>
-            </materialDesign:Card>
-
-
-
-            <Border Grid.Column="1" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" BorderThickness="0,0,0,2" Height="120">
-                <Border.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FFF7F6F6" Offset="0"/>
-                        <GradientStop Color="#FFF6F6F6" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
-
-                <StackPanel HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                    <StackPanel x:Name="stackPipeContainer" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0">
-                        <Image x:Name="imgMfc" HorizontalAlignment="Left" Height="111" VerticalAlignment="Top" Width="66" Source="/FlowMeter;component/Resources/mfc.png" Margin="0,14,-9,0"/>
-                        <StackPanel x:Name="stackExtra" Orientation="Vertical" Width="52" Margin="-1,74,0,1.2">
-                            <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="52" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0"/>
-                            <Label Content="Extra" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
-                                <Label.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-12"/>
-                                    </TransformGroup>
-                                </Label.RenderTransform>
-                            </Label>
-                        </StackPanel>
-
-                        <StackPanel x:Name="stackP5a" Orientation="Vertical" Width="81" Margin="-4,74,0,1.2">
-                            <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0,0,-0.2,0" />
-                            <Label x:Name="lblPipeP5a" Content="P5a" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
-                                <Label.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-12"/>
-                                    </TransformGroup>
-                                </Label.RenderTransform>
-                            </Label>
-                        </StackPanel>
-
-                        <StackPanel x:Name="stackAsset124" Orientation="Vertical" Width="82" Margin="-5,74,0,1.2">
-                            <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                            <Label Content="Asset124" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                                <Label.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-12"/>
-                                    </TransformGroup>
-                                </Label.RenderTransform>
-                            </Label>
-                        </StackPanel>
-
-                        <StackPanel x:Name="stackAsset136" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
-                            <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                            <Label Content="Asset136" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                                <Label.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-12"/>
-                                    </TransformGroup>
-                                </Label.RenderTransform>
-                            </Label>
-                        </StackPanel>
-
-                        <StackPanel x:Name="stackAsset112" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
-                            <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                            <Label Content="Asset112" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
-                                <Label.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-12"/>
-                                    </TransformGroup>
-                                </Label.RenderTransform>
-                            </Label>
-                        </StackPanel>
-
-                        <StackPanel x:Name="stackAsset101" Orientation="Vertical" Width="82" Margin="-7,74,0,1.2">
-                            <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0"/>
-                            <Label Content="Asset101" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0">
-                                <Label.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform Y="-12"/>
-                                    </TransformGroup>
-                                </Label.RenderTransform>
-                            </Label>
-                        </StackPanel>
-
-                        <Image HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="34" RenderTransformOrigin="1.561,0.467" Source="/FlowMeter;component/Resources/valve.png" Margin="-5,72,0,0"/>
-                        <Image HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="93" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="-7,74,0,0"/>
-
-                        <Image HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="151" Source="/FlowMeter;component/Resources/meter.png" Margin="-18,14,0,0"/>
                     </StackPanel>
-                </StackPanel>
 
-            </Border>
+                </Border>
 
-        </Grid>
+            </Grid>
+
+        </Border>
 
         <Grid Grid.Row="2" Background="#FFF7F6F6" >
             <Grid.ColumnDefinitions>
@@ -190,7 +193,7 @@
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Margin="10,5,0,5" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"><Run Text="Stray Volume"/></TextBlock>
 
-                    <Button Grid.Row="0" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,7,0" Background="#FF3A4EE4" BorderBrush="#FF4684DD" Width="24" Height="24" Click="OnRs232Settings" Focusable="False">
+                    <Button Grid.Row="0" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,7,0" Background="#FF3A4EE4" BorderBrush="#FF4684DD" Width="24" Height="24" Click="OnPipeSettings" Focusable="False">
                         <materialDesign:PackIcon Kind="GearOutline" Height="20"  Width="24" Focusable="False" />
                     </Button>
                     
@@ -289,7 +292,7 @@
 
 
 
-                    <Border Grid.Row="2" Background="White" Padding="10,0,10,10">
+                    <Border Grid.Row="2" Margin="0.4,0,-0.2,-0.4" Background="White" Padding="10,0,10,10">
                         <StackPanel >
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -452,7 +455,7 @@
 
                         <Button x:Name="btnExternalStart" Content="Start" Click="BtnExternalStart_Click" Height="28" Margin="20,2" FontSize="14"/>
                         <Button x:Name="btnExternalStop" Content="Stop the gas flow" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
-    materialDesign:ButtonProgressAssist.IsIndeterminate="True" Click="BtnExternalStop_Click" Visibility="Collapsed" Height="28" Margin="20,2" Width="130" FontSize="14"/>
+    materialDesign:ButtonProgressAssist.IsIndeterminate="True" Click="BtnExternalStop_Click" Visibility="Collapsed" Height="28" Margin="20,2" FontSize="14"/>
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Status :" Width="90" HorizontalContentAlignment="Right"/>
                             <Label x:Name="lblExternalStatus" Content="---" />
