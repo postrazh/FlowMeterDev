@@ -54,6 +54,15 @@ namespace FlowMeter
 
             var myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(1000));
             MySnackbar.MessageQueue = myMessageQueue;
+
+        }
+
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
+
+            // connect
+            tglConnect.IsChecked = true;
         }
 
         public void showSnackBarMessage(string str)
@@ -124,8 +133,7 @@ namespace FlowMeter
             // log to rich textbox
             this.Dispatcher.Invoke(new Action(delegate
             {
-                this.richTxtConsole.AppendText(strFull);
-                this.richTxtConsole.ScrollToEnd();
+                Log(strFull);
             }));
 
 
@@ -286,7 +294,7 @@ namespace FlowMeter
             SumupStrayVolume();
         }
 
-        private bool sendToSerial(string strData)
+        private bool SendToSerial(string strData)
         {
             if (serial == null || serial.Serial.IsOpen == false)
             {
@@ -298,82 +306,85 @@ namespace FlowMeter
                 showSnackBarMessage("Can not send to the Serial Port!");
                 return false;
             }
+            Log($">>{strData}");
+            
+            return true;
+        }
 
-            string append;
-            append = ">> ";
-            append += strData;
-            richTxtConsole.AppendText(append);
-			return true;
+        private void Log(string str)
+        {
+            richTxtConsole.AppendText($"{DateTime.Now: HH:mm:ss}  : {str.TrimEnd('\r', '\n')} \n");
+            richTxtConsole.ScrollToEnd();
         }
 
         private void BtnReadStray_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@16?\r\n");
+            SendToSerial("@16?\r\n");
         }
 
         private void BtnWriteStray_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@16" + ToOneDecimal(txtStrayTotal.Text) + "\r\n");
+            SendToSerial("@16" + ToOneDecimal(txtStrayTotal.Text) + "\r\n");
         }
 
         private void BtnReadMaxPressure_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@10?\r\n");
+            SendToSerial("@10?\r\n");
         }
 
         private void BtnWriteMaxPressure_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@10" + txtMaxPressure.Text + "\r\n");
+            SendToSerial("@10" + txtMaxPressure.Text + "\r\n");
         }
 
         private void BtnReadTimeout_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@11?\r\n");
+            SendToSerial("@11?\r\n");
         }
 
         private void BtnWriteTimeout_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@11" + txtTimeout.Text + "\r\n");
+            SendToSerial("@11" + txtTimeout.Text + "\r\n");
         }
 
         private void BtnReadMinPressure_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@14?\r\n");
+            SendToSerial("@14?\r\n");
         }
 
         private void BtnWriteMinPressure_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@14" + txtMinPressure.Text + "\r\n");
+            SendToSerial("@14" + txtMinPressure.Text + "\r\n");
         }
 
         private void BtnReadPurgeCycles_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@17?\r\n");
+            SendToSerial("@17?\r\n");
         }
 
         private void BtnWritePurgeCycles_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@17" + txtPurgeCycles.Text + "\r\n");
+            SendToSerial("@17" + txtPurgeCycles.Text + "\r\n");
         }
 
         private void BtnReadStabilizationTime_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@18?\r\n");
+            SendToSerial("@18?\r\n");
         }
 
         private void BtnWriteStabilizationTime_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@18" + txtStabilizationTime.Text + "\r\n");
+            SendToSerial("@18" + txtStabilizationTime.Text + "\r\n");
         }
 
         private void BtnReadBasePressure_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@40?\r\n");
+            SendToSerial("@40?\r\n");
         }
 
         private void BtnWriteBasePressure_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@40" + txtBasePressure.Text + "\r\n");
+            SendToSerial("@40" + txtBasePressure.Text + "\r\n");
         }
 
         private string ToOneDecimal(string strValue)
@@ -435,7 +446,7 @@ namespace FlowMeter
         }
 		private void BtnCalculateFlow_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@40?\r\n");
+            SendToSerial("@40?\r\n");
         }
 
         
@@ -445,11 +456,11 @@ namespace FlowMeter
         {
             if (calcMode == CalcMode.STARTED_EXTERNAL_VOLUME)
             {
-                sendToSerial("@20?\r\n");
+                SendToSerial("@20?\r\n");
             }
             else if (calcMode == CalcMode.STARTED_FLOW_RATE)
             {
-                sendToSerial("@20?\r\n");
+                SendToSerial("@20?\r\n");
             }
         }
 
@@ -457,14 +468,16 @@ namespace FlowMeter
         {
             PasswordInput passwordInput = new PasswordInput();
             passwordInput.Owner = this;
+#if !DEBUG
             if (passwordInput.ShowDialog() != true)
             {
                 return;
             }
+#endif
 
             if (calcMode == CalcMode.NONE)
             {
-                if (!sendToSerial("@01\r\n"))
+                if (!SendToSerial("@01\r\n"))
                     return;
 
                 lblExternalStatus.Content = "Starting...";
@@ -509,12 +522,12 @@ namespace FlowMeter
             btnExternalStop.Visibility = Visibility.Collapsed;
             btnExternalStart.IsEnabled = true;
 
-            sendToSerial("@04\r\n");
+            SendToSerial("@04\r\n");
         }
 
         private void continueExternalVolume()
         {
-            sendToSerial("@23?\r\n");
+            SendToSerial("@23?\r\n");
         }
 
         private void reportExternalVolume(string strValue)
@@ -536,7 +549,7 @@ namespace FlowMeter
         {
             if (calcMode == CalcMode.NONE)
             {
-                if (!sendToSerial("@00\r\n"))
+                if (!SendToSerial("@00\r\n"))
                     return;
 
                 lblFlowStatus.Content = "Starting...";
@@ -563,7 +576,7 @@ namespace FlowMeter
             progressFlow.Visibility = Visibility.Hidden;
             btnFlowStart.IsEnabled = true;
 
-            sendToSerial("@21?\r\n");                       // ask the flow rate
+            SendToSerial("@21?\r\n");                       // ask the flow rate
         }
 
         private void failedToStartFlowRate()
@@ -579,12 +592,23 @@ namespace FlowMeter
 
         private void BtnContinueGbror_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@04\r\n");
+            SendToSerial("@04\r\n");
         }
 
         private void BtnAbortGbror_Click(object sender, RoutedEventArgs e)
         {
-            sendToSerial("@05\r\n");
+            SendToSerial("@05\r\n");
+
+            calcMode = CalcMode.NONE;
+
+            lblExternalStatus.Content = "---";
+            btnExternalStop.Visibility = Visibility.Collapsed;
+            btnExternalStart.IsEnabled = true;
+            progressExternal.Visibility = Visibility.Hidden;
+
+            lblFlowStatus.Content = "---";
+            btnFlowStart.IsEnabled = true;
+            progressFlow.Visibility = Visibility.Hidden;
         }
     }
 }
