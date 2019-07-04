@@ -274,6 +274,17 @@ namespace FlowMeter
                 lblPipeP5a.Content = "1157";
             }
 
+            // show p5a
+            if (tglP5a.IsChecked == false && tglP6a.IsChecked == false && tgl1157.IsChecked == false)
+            {
+                stackP5a.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                stackP5a.Visibility = Visibility.Visible;
+            }
+
+            // extra
             if (tglStrayExtra.IsChecked == true)
             {
                 totalStray += Convert.ToDouble(txtStrayExtra.Text);
@@ -590,12 +601,12 @@ namespace FlowMeter
                             "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private void BtnContinueGbror_Click(object sender, RoutedEventArgs e)
+        private void BtnContinue_Click(object sender, RoutedEventArgs e)
         {
             SendToSerial("@04\r\n");
         }
 
-        private void BtnAbortGbror_Click(object sender, RoutedEventArgs e)
+        private void BtnAbort_Click(object sender, RoutedEventArgs e)
         {
             SendToSerial("@05\r\n");
 
