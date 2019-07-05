@@ -10,6 +10,8 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -41,6 +43,18 @@ namespace FlowMeter
         }
         private CalcMode calcMode = CalcMode.NONE;
 
+        private void TextBox_DecimalOnly(object sender, TextCompositionEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            e.Handled = !Regex.IsMatch(e.Text, @"^[0-9]*(?:\.[0-9]*)?$");
+        }
+
+        private void TextBox_NumberOnly(object sender, TextCompositionEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            e.Handled = !Regex.IsMatch(e.Text, "^[0-9]*$");
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,8 +68,8 @@ namespace FlowMeter
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Start();
 
-            var myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(1000));
-            MySnackbar.MessageQueue = myMessageQueue;
+            //var myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(2000));
+            //MySnackbar.MessageQueue = myMessageQueue;
 
         }
 
@@ -73,6 +87,8 @@ namespace FlowMeter
 
         public void showSnackBarMessage(string str)
         {
+            
+            MySnackbar.MessageQueue.Dispose();
             MySnackbar.MessageQueue.Enqueue(str);
         }
 
@@ -477,6 +493,15 @@ namespace FlowMeter
 
         private void BtnExternalStart_Click(object sender, RoutedEventArgs e)
         {
+            showSnackBarMessage("Sending [Report status(@20)] after 7 seconds...");
+            Task.Factory.StartNew(() => Thread.Sleep(3000))
+                .ContinueWith((t) =>
+                {
+                    SendToSerial("@20\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            return;
+
             PasswordInput passwordInput = new PasswordInput();
             passwordInput.Owner = this;
 #if !DEBUG
@@ -604,6 +629,8 @@ namespace FlowMeter
         private void BtnContinue_Click(object sender, RoutedEventArgs e)
         {
             SendToSerial("@04\r\n");
+
+            
         }
 
         private void BtnAbort_Click(object sender, RoutedEventArgs e)
@@ -681,18 +708,6 @@ namespace FlowMeter
 
             // asset extra value
             txtAssetExtra.Text = Settings.AssetExtraValue;
-        }
-
-        private void TextBox_DecimalOnly(object sender, TextCompositionEventArgs e)
-        {
-            var textBox = sender as TextBox;
-            e.Handled = !Regex.IsMatch(e.Text, @"^[0-9]*(?:\.[0-9]*)?$");
-        }
-
-        private void TextBox_NumberOnly(object sender, TextCompositionEventArgs e)
-        {
-            var textBox = sender as TextBox;
-            e.Handled = !Regex.IsMatch(e.Text, "^[0-9]*$");
         }
     }
 }
