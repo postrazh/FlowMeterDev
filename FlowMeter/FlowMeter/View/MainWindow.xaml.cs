@@ -568,7 +568,7 @@ namespace FlowMeter
                 // ready status
                 if (status == "0A")
                 {
-                    _notifier.ShowSuccess($"Received 'External Volume Status'={status}.");
+                    _notifier.ShowSuccess($"Received 'External Volume Status' = 0x{status}.");
 
                     calcMode = CalcMode.WAITING_STOP_FLOW;
 
@@ -580,7 +580,7 @@ namespace FlowMeter
             // after external volume, require the report status
             else if (calcMode == CalcMode.WAITING_REPORT_STATUS_20)
             {
-                _notifier.ShowSuccess("Received 'Report Status'.");
+                _notifier.ShowSuccess("Received 'Report Status' = 0x{status}.");
                 lblExternalStatus.Content = "After 2 secs, 'Report Volume'";
 
                 Task.Factory.StartNew(() => Thread.Sleep(2000))
@@ -602,7 +602,7 @@ namespace FlowMeter
                 // if ready
                 if (status == "00")
                 {
-                    _notifier.ShowSuccess($"Received 'Flow Rate Status'={status}!");
+                    _notifier.ShowSuccess($"Received 'Flow Rate Status' = 0x{status}.");
                     lblFlowStatus.Content = "After 2 secs, 'Report Flow'";
 
                     Task.Factory.StartNew(() => Thread.Sleep(2000))
@@ -619,9 +619,54 @@ namespace FlowMeter
                     }, TaskScheduler.FromCurrentSynchronizationContext());
                 }
             }
+            else
+            {
+                _notifier.ShowSuccess($"Received 'Report Status' = 0x{status}.");
+            }
 
+            // parse and show status to the UI
+            ParseStatus(status);
+        }
 
-            // TODO: show status to the UI
+        private readonly string[] statusOperatingMode = { "Idle", "Verify flow", "Calculate volume", "Reserved", "Purge", "Setup", "Isolated Leak Check", "Connected Leak Check" };
+        private readonly string[] statusCurrentOperation = { "Busy", "Waiting for Flow Off", "Busy", "Waiting for Flow On" };
+        private readonly string[] statusLastOperation = { "No error", "Valve not responding", "Unstable pressure", "Pressure not rising", "Pressure not falling", "Flow not stable", "Operation aborted", "Volume unknown" };
+
+        private void ParseStatus(string strStatus)
+        {
+            // convert to integer
+            int status = Convert.ToInt32(strStatus, 16);
+            if (status < 0 || status > 255)
+            {
+                _notifier.ShowError($"Invalid Status : {status}");
+                return;
+            }
+
+            // convert to bits
+            int D0, D1, D2, D3, D4, D5, D6, D7;
+            D0 = status & 0x01;
+            D1 = (status >> 1) & 0x01;
+            D2 = (status >> 2) & 0x01;
+            D3 = (status >> 3) & 0x01;
+            D4 = (status >> 4) & 0x01;
+            D5 = (status >> 5) & 0x01;
+            D6 = (status >> 6) & 0x01;
+            D7 = (status >> 7) & 0x01;
+
+            // display to the status table
+            lblD0.Content = D0.ToString();
+            lblD1.Content = D1.ToString();
+            lblD2.Content = D2.ToString();
+            lblD3.Content = D3.ToString();
+            lblD4.Content = D4.ToString();
+            lblD5.Content = D5.ToString();
+            lblD6.Content = D6.ToString();
+            lblD7.Content = D7.ToString();
+
+            // display status message
+            lblStatusOperatingMode.Content = statusOperatingMode[D2 * 4 + D1 * 2 + D0];
+            lblStatusCurrentOperation.Content = statusCurrentOperation[D7 * 2 + D3];
+            lblStatusLastOperation.Content = statusLastOperation[D6 * 4 + D5 * 2 + D4];
         }
 
         private void BtnExternalStop_Click(object sender, RoutedEventArgs e)

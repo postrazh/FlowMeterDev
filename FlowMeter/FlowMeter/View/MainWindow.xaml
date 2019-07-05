@@ -377,10 +377,10 @@
 
                     <Border Grid.Row="2" Background="White" Padding="10,0,10,10">
                         <StackPanel Margin="0.4,0,-0.2,-0.4" Orientation="Vertical">
-                            <Grid Margin="0,2,0,0">
+                            <Grid Margin="20,2,0,0">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="7*"/>
-                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -388,12 +388,12 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Grid.Column="0" Grid.Row="0" Content="Operating Mode : " HorizontalAlignment="Right" FontSize="14" Padding="5,2"/>
-                                <Label Grid.Column="0" Grid.Row="1" Content="Status of the current Operation : " HorizontalAlignment="Right" FontSize="14" Padding="5,2"/>
-                                <Label Grid.Column="0" Grid.Row="2" Content="Results of the last operation : " HorizontalAlignment="Right" FontSize="14" Padding="5,2"/>
+                                <Label Grid.Column="0" Grid.Row="1" Content="Current Operation : " HorizontalAlignment="Right" FontSize="14" Padding="5,2"/>
+                                <Label Grid.Column="0" Grid.Row="2" Content="Last Operation : " HorizontalAlignment="Right" FontSize="14" Padding="5,2"/>
 
-                                <Label x:Name="lblOperatingMode" Grid.Column="1" Grid.Row="0" Content="Idle" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
-                                <Label x:Name="lblCurrentStatus" Grid.Column="1" Grid.Row="1" Content="Busy" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
-                                <Label x:Name="lblLastResult" Grid.Column="1" Grid.Row="2" Content="No error" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
+                                <Label x:Name="lblStatusOperatingMode" Grid.Column="1" Grid.Row="0" Content="Idle" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
+                                <Label x:Name="lblStatusCurrentOperation" Grid.Column="1" Grid.Row="1" Content="Busy" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
+                                <Label x:Name="lblStatusLastOperation" Grid.Column="1" Grid.Row="2" Content="No error" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
 
                             </Grid>
 
