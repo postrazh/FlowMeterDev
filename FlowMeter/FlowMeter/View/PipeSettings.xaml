@@ -35,25 +35,25 @@
             <Label Grid.Column="1" Grid.Row="6" Content="7" VerticalAlignment="Center" />
 
             <!-- Asset Name -->
-            <TextBox Grid.Column="2" Grid.Row="0" Text="Asset1" VerticalAlignment="Center" />
-            <TextBox Grid.Column="2" Grid.Row="1" Text="Asset1" VerticalAlignment="Center" />
-            <TextBox Grid.Column="2" Grid.Row="2" Text="Asset1" VerticalAlignment="Center" />
-            <TextBox Grid.Column="2" Grid.Row="3" Text="Asset1" VerticalAlignment="Center" />
-            <TextBox Grid.Column="2" Grid.Row="4" Text="Asset1" VerticalAlignment="Center" />
-            <TextBox Grid.Column="2" Grid.Row="5" Text="Asset1" VerticalAlignment="Center" />
-            <TextBox Grid.Column="2" Grid.Row="6" Text="Asset1" VerticalAlignment="Center" />
+            <TextBox x:Name="txtAsset01Name" Grid.Column="2" Grid.Row="0" Text="Asset1" VerticalAlignment="Center" />
+            <TextBox x:Name="txtAsset02Name" Grid.Column="2" Grid.Row="1" Text="Asset1" VerticalAlignment="Center" />
+            <TextBox x:Name="txtAsset03Name" Grid.Column="2" Grid.Row="2" Text="Asset1" VerticalAlignment="Center" />
+            <TextBox x:Name="txtAsset04Name" Grid.Column="2" Grid.Row="3" Text="Asset1" VerticalAlignment="Center" />
+            <TextBox x:Name="txtAsset05Name" Grid.Column="2" Grid.Row="4" Text="Asset1" VerticalAlignment="Center" />
+            <TextBox x:Name="txtAsset06Name" Grid.Column="2" Grid.Row="5" Text="Asset1" VerticalAlignment="Center" />
+            <TextBox x:Name="txtAsset07Name" Grid.Column="2" Grid.Row="6" Text="Asset1" VerticalAlignment="Center" />
 
             <!-- Asset Value -->
-            <TextBox Grid.Column="4" Grid.Row="0" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_NumberOnly" />
-            <TextBox Grid.Column="4" Grid.Row="1" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_NumberOnly" />
-            <TextBox Grid.Column="4" Grid.Row="2" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_NumberOnly" />
-            <TextBox Grid.Column="4" Grid.Row="3" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_NumberOnly" />
-            <TextBox Grid.Column="4" Grid.Row="4" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_NumberOnly" />
-            <TextBox Grid.Column="4" Grid.Row="5" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_NumberOnly" />
-            <TextBox Grid.Column="4" Grid.Row="6" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_NumberOnly" />
+            <TextBox x:Name="txtAsset01Value" Grid.Column="4" Grid.Row="0" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_DecimalOnly" />
+            <TextBox x:Name="txtAsset02Value" Grid.Column="4" Grid.Row="1" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_DecimalOnly" />
+            <TextBox x:Name="txtAsset03Value" Grid.Column="4" Grid.Row="2" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_DecimalOnly" />
+            <TextBox x:Name="txtAsset04Value" Grid.Column="4" Grid.Row="3" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_DecimalOnly" />
+            <TextBox x:Name="txtAsset05Value" Grid.Column="4" Grid.Row="4" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_DecimalOnly" />
+            <TextBox x:Name="txtAsset06Value" Grid.Column="4" Grid.Row="5" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_DecimalOnly" />
+            <TextBox x:Name="txtAsset07Value" Grid.Column="4" Grid.Row="6" Text="0" HorizontalContentAlignment="Center" VerticalAlignment="Center" PreviewTextInput="TextBox_DecimalOnly" />
         </Grid>
         <Grid Margin="0,0,0.4,0" Height="32">
-            <Button Content="Ok" Height="Auto" Margin="37,29,187.8,-29" RenderTransformOrigin="0.509,0.938" IsDefault="True" />
+            <Button Content="Ok" Height="Auto" Margin="37,29,187.8,-29" RenderTransformOrigin="0.509,0.938" IsDefault="True" Click="OnOk" />
             <Button Content="Cancel" Height="Auto" Margin="196,29,26.8,-29" IsCancel="True" />
         </Grid>
     </StackPanel>

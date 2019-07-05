@@ -1,5 +1,6 @@
 ﻿using Ald.SerialPort.Configuration;
 using FlowMeter.Configuration;
+using FlowMeter.Helpers;
 using FlowMeter.View;
 using MaterialDesignThemes.Wpf;
 using System;
@@ -8,6 +9,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -61,6 +63,10 @@ namespace FlowMeter
         {
             base.OnInitialized(e);
 
+            // load values
+            LoadAssetsLabels();
+            LoadToggleState();
+
             // connect
             tglConnect.IsChecked = true;
         }
@@ -86,6 +92,8 @@ namespace FlowMeter
             dlg.Owner = this;
             if (dlg.ShowDialog() == true)
             {
+                LoadAssetsLabels();
+
                 Debug.WriteLine("Changed the pipe settings.");
             }
         }
@@ -219,10 +227,16 @@ namespace FlowMeter
             }
         }
 
-        private void TxtStrayExtra_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtAssetExtra_TextChanged(object sender, TextChangedEventArgs e)
         {
-            SumupStrayVolume();
+            TextBox textBox = sender as TextBox;
+            // check whether the text is changed by the user
+            if (textBox.IsFocused)
+            {
+                Settings.AssetExtraValue = txtAssetExtra.Text.ToString();
 
+                SumupStrayVolume();
+            }
         }
 
         private void SumupStrayVolume()
@@ -233,77 +247,79 @@ namespace FlowMeter
             double totalStray = 0;
 
             // Asset, CCM
-            if (tgl101.IsChecked == true)
+            if (tglAsset01.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(lblAsset101.Content.ToString());
-                stackAsset101.Visibility = Visibility.Visible;
+                totalStray += Convert.ToDouble(lblAsset01Value.Content.ToString());
+                stackAsset01.Visibility = Visibility.Visible;
             }
             else
-                stackAsset101.Visibility = Visibility.Collapsed;
+                stackAsset01.Visibility = Visibility.Collapsed;
 
-            if (tgl112.IsChecked == true)
+            if (tglAsset02.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(lblAsset112.Content.ToString());
-                stackAsset112.Visibility = Visibility.Visible;
+                totalStray += Convert.ToDouble(lblAsset02Value.Content.ToString());
+                stackAsset02.Visibility = Visibility.Visible;
             }
             else
-                stackAsset112.Visibility = Visibility.Collapsed;
+                stackAsset02.Visibility = Visibility.Collapsed;
 
-            if (tgl136.IsChecked == true)
+            if (tglAsset03.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(lblAsset136.Content.ToString());
-                stackAsset136.Visibility = Visibility.Visible;
+                totalStray += Convert.ToDouble(lblAsset03Value.Content.ToString());
+                stackAsset03.Visibility = Visibility.Visible;
             }
             else
-                stackAsset136.Visibility = Visibility.Collapsed;
+                stackAsset03.Visibility = Visibility.Collapsed;
 
-            if (tgl124.IsChecked == true)
+            if (tglAsset04.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(lblAsset124.Content.ToString());
-                stackAsset124.Visibility = Visibility.Visible;
+                totalStray += Convert.ToDouble(lblAsset04Value.Content.ToString());
+                stackAsset04.Visibility = Visibility.Visible;
             }
             else
-                stackAsset124.Visibility = Visibility.Collapsed;
+                stackAsset04.Visibility = Visibility.Collapsed;
 
             // Flow meter,CCM
-            if (tglP5a.IsChecked == true)
+            if (tglAsset05.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(lblP5a.Content.ToString());
-                lblPipeP5a.Content = "P5a";
+                totalStray += Convert.ToDouble(lblAsset05Value.Content.ToString());
+                lblAsset567.Content = Settings.Asset05Name.ToString();
             }
 
-            if (tglP6a.IsChecked == true)
+            if (tglAsset06.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(lblP6a.Content.ToString());
-                lblPipeP5a.Content = "P6a";
+                totalStray += Convert.ToDouble(lblAsset06Value.Content.ToString());
+                lblAsset567.Content = Settings.Asset06Name.ToString();
             }
 
-            if (tgl1157.IsChecked == true)
+            if (tglAsset07.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(lbl1157.Content.ToString());
-                lblPipeP5a.Content = "1157";
+                totalStray += Convert.ToDouble(lblAsset07Value.Content.ToString());
+                lblAsset567.Content = Settings.Asset07Name.ToString();
             }
 
             // show p5a
-            if (tglP5a.IsChecked == false && tglP6a.IsChecked == false && tgl1157.IsChecked == false)
+            if (tglAsset05.IsChecked == false && tglAsset06.IsChecked == false && tglAsset07.IsChecked == false)
             {
-                stackP5a.Visibility = Visibility.Collapsed;
+                stackAsset567.Visibility = Visibility.Collapsed;
             }
             else
             {
-                stackP5a.Visibility = Visibility.Visible;
+                stackAsset567.Visibility = Visibility.Visible;
             }
 
             // extra
-            if (tglStrayExtra.IsChecked == true)
+            if (tglAssetExtra.IsChecked == true)
             {
-                totalStray += Convert.ToDouble(txtStrayExtra.Text);
+                double value = 0;
+                double.TryParse(txtAssetExtra.Text, out value);
+                totalStray += value;
 
-                stackExtra.Visibility = Visibility.Visible;
+                stackAssetExtra.Visibility = Visibility.Visible;
             }
             else
             {
-                stackExtra.Visibility = Visibility.Collapsed;
+                stackAssetExtra.Visibility = Visibility.Collapsed;
             }
 
             txtStrayTotal.Text = totalStray.ToString();
@@ -416,62 +432,36 @@ namespace FlowMeter
             return retVal;
         }
 
-        private void TglP5a_Checked(object sender, RoutedEventArgs e)
-        {
-            if (tglP6a != null)
-                tglP6a.IsChecked = false;
-            if (tgl1157 != null)
-                tgl1157.IsChecked = false;
-
-            SumupStrayVolume();
-        }
-
-        private void TglP5a_Unchecked(object sender, RoutedEventArgs e)
-        {
-            SumupStrayVolume();
-        }
-
-        private void TglP6a_Checked(object sender, RoutedEventArgs e)
-        {
-            if (tglP5a != null)
-                tglP5a.IsChecked = false;
-            if (tgl1157 != null)
-                tgl1157.IsChecked = false;
-
-            SumupStrayVolume();
-        }
-
-        private void TglP6a_Unchecked(object sender, RoutedEventArgs e)
-        {
-            SumupStrayVolume();
-        }
-
-        private void Tgl1157_Checked(object sender, RoutedEventArgs e)
-        {
-            if (tglP5a != null)
-                tglP5a.IsChecked = false;
-            if (tglP6a != null)
-                tglP6a.IsChecked = false;
-
-            SumupStrayVolume();
-        }
-
-        private void Tgl1157_Unchecked(object sender, RoutedEventArgs e)
-        {
-            SumupStrayVolume();
-        }
-
         private void Toggle_Changed(object sender, RoutedEventArgs e)
         {
+            ToggleButton tglSender = sender as ToggleButton;
+            if (tglSender == tglAsset05 && tglSender.IsChecked == true)
+            {
+                tglAsset06.IsChecked = false;
+                tglAsset07.IsChecked = false;
+            }
+            else if (tglSender == tglAsset06 && tglSender.IsChecked == true)
+            {
+                tglAsset05.IsChecked = false;
+                tglAsset07.IsChecked = false;
+            }
+            else if (tglSender == tglAsset07 && tglSender.IsChecked == true)
+            {
+                tglAsset05.IsChecked = false;
+                tglAsset06.IsChecked = false;
+            }
+
+            // save toggle
+            SaveToggleState();
+
+            // calculate
             SumupStrayVolume();
         }
+
 		private void BtnCalculateFlow_Click(object sender, RoutedEventArgs e)
         {
             SendToSerial("@40?\r\n");
         }
-
-        
-
 
         private void TimerTick(object sender, EventArgs e)
         {
@@ -630,6 +620,79 @@ namespace FlowMeter
             lblFlowStatus.Content = "---";
             btnFlowStart.IsEnabled = true;
             progressFlow.Visibility = Visibility.Hidden;
+        }
+
+        // load asset labels
+        private void LoadAssetsLabels()
+        {
+            // asset names
+            lblAsset01Name.Content = Settings.Asset01Name;
+            lblAsset02Name.Content = Settings.Asset02Name;
+            lblAsset03Name.Content = Settings.Asset03Name;
+            lblAsset04Name.Content = Settings.Asset04Name;
+            lblAsset05Name.Content = Settings.Asset05Name;
+            lblAsset06Name.Content = Settings.Asset06Name;
+            lblAsset07Name.Content = Settings.Asset07Name;
+
+            // asset values
+            lblAsset01Value.Content = Settings.Asset01Value.ToString();
+            lblAsset02Value.Content = Settings.Asset02Value.ToString();
+            lblAsset03Value.Content = Settings.Asset03Value.ToString();
+            lblAsset04Value.Content = Settings.Asset04Value.ToString();
+            lblAsset05Value.Content = Settings.Asset05Value.ToString();
+            lblAsset06Value.Content = Settings.Asset06Value.ToString();
+            lblAsset07Value.Content = Settings.Asset07Value.ToString();
+
+            // pipe values
+            lblAsset01Pipe.Content = Settings.Asset01Name;
+            lblAsset02Pipe.Content = Settings.Asset02Name;
+            lblAsset03Pipe.Content = Settings.Asset03Name;
+            lblAsset04Pipe.Content = Settings.Asset04Name;
+
+            SumupStrayVolume();
+        }
+
+        // save toggle state
+        private void SaveToggleState()
+        {
+            // asset toggle
+            Settings.Asset01Toggle = tglAsset01.IsChecked == true;
+            Settings.Asset02Toggle = tglAsset02.IsChecked == true;
+            Settings.Asset03Toggle = tglAsset03.IsChecked == true;
+            Settings.Asset04Toggle = tglAsset04.IsChecked == true;
+            Settings.Asset05Toggle = tglAsset05.IsChecked == true;
+            Settings.Asset06Toggle = tglAsset06.IsChecked == true;
+            Settings.Asset07Toggle = tglAsset07.IsChecked == true;
+            Settings.AssetExtraToggle = tglAssetExtra.IsChecked == true;
+        }
+
+        // load toggle state
+        private void LoadToggleState()
+        {
+            // asset toggle
+            tglAsset01.IsChecked = Settings.Asset01Toggle;
+            tglAsset02.IsChecked = Settings.Asset02Toggle;
+            tglAsset03.IsChecked = Settings.Asset03Toggle;
+            tglAsset04.IsChecked = Settings.Asset04Toggle;
+            tglAsset05.IsChecked = Settings.Asset05Toggle;
+            tglAsset06.IsChecked = Settings.Asset06Toggle;
+            tglAsset07.IsChecked = Settings.Asset07Toggle;
+            tglAssetExtra.IsChecked = Settings.AssetExtraToggle;
+
+            // asset extra value
+            txtAssetExtra.Text = Settings.AssetExtraValue;
+        }
+
+        private void TextBox_DecimalOnly(object sender, TextCompositionEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            e.Handled = !Regex.IsMatch(e.Text, @"^[0-9]*(?:\.[0-9]*)?$");
+        }
+
+        private void TextBox_NumberOnly(object sender, TextCompositionEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            e.Handled = !Regex.IsMatch(e.Text, "^[0-9]*$");
         }
     }
 }

@@ -30,7 +30,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Border Background="#FFE6E6E6" BorderBrush="#FFD0CECE" BorderThickness="1">
-                            <TextBlock Grid.Row="0" Margin="10,5" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"><Run FontSize="21.75" Text="RS-232"/></TextBlock>
+                            <TextBlock Grid.Row="0" Margin="0,5,10,5" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"><Run FontSize="21.75" Text="RS-232"/></TextBlock>
                         </Border>
 
 
@@ -73,7 +73,7 @@
                     <StackPanel HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                         <StackPanel x:Name="stackPipeContainer" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0">
                             <Image x:Name="imgMfc" HorizontalAlignment="Left" Height="111" VerticalAlignment="Top" Width="66" Source="/FlowMeter;component/Resources/mfc.png" Margin="0,14,-9,0"/>
-                            <StackPanel x:Name="stackExtra" Orientation="Vertical" Width="52" Margin="-1,74,0,1.2">
+                            <StackPanel x:Name="stackAssetExtra" Orientation="Vertical" Width="52" Margin="-1,74,0,1.2">
                                 <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="52" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0"/>
                                 <Label Content="Extra" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
                                     <Label.RenderTransform>
@@ -87,9 +87,9 @@
                                 </Label>
                             </StackPanel>
 
-                            <StackPanel x:Name="stackP5a" Orientation="Vertical" Width="81" Margin="-4,74,0,1.2">
+                            <StackPanel x:Name="stackAsset567" Orientation="Vertical" Width="81" Margin="-4,74,0,1.2">
                                 <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0,0,-0.2,0" />
-                                <Label x:Name="lblPipeP5a" Content="P5a" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
+                                <Label x:Name="lblAsset567" Content="P5a" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" >
                                     <Label.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -101,9 +101,9 @@
                                 </Label>
                             </StackPanel>
 
-                            <StackPanel x:Name="stackAsset124" Orientation="Vertical" Width="82" Margin="-5,74,0,1.2">
+                            <StackPanel x:Name="stackAsset04" Orientation="Vertical" Width="82" Margin="-5,74,0,1.2">
                                 <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                                <Label Content="Asset124" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                <Label x:Name="lblAsset04Pipe" Content="Asset124" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                     <Label.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -115,9 +115,9 @@
                                 </Label>
                             </StackPanel>
 
-                            <StackPanel x:Name="stackAsset136" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
+                            <StackPanel x:Name="stackAsset03" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
                                 <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                                <Label Content="Asset136" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                <Label x:Name="lblAsset03Pipe" Content="Asset136" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                     <Label.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -129,9 +129,9 @@
                                 </Label>
                             </StackPanel>
 
-                            <StackPanel x:Name="stackAsset112" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
+                            <StackPanel x:Name="stackAsset02" Orientation="Vertical" Width="82" Margin="-6,74,0,1.2">
                                 <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png"/>
-                                <Label Content="Asset112" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                <Label x:Name="lblAsset02Pipe" Content="Asset112" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                     <Label.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -143,9 +143,9 @@
                                 </Label>
                             </StackPanel>
 
-                            <StackPanel x:Name="stackAsset101" Orientation="Vertical" Width="82" Margin="-7,74,0,1.2">
+                            <StackPanel x:Name="stackAsset01" Orientation="Vertical" Width="82" Margin="-7,74,0,1.2">
                                 <Image HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="81" Stretch="Fill" Source="/FlowMeter;component/Resources/pipe.png" Margin="0"/>
-                                <Label Content="Asset101" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0">
+                                <Label x:Name="lblAsset01Pipe" Content="Asset101" HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5" Margin="0">
                                     <Label.RenderTransform>
                                         <TransformGroup>
                                             <ScaleTransform/>
@@ -173,9 +173,9 @@
         <Grid Grid.Row="2" Background="#FFF7F6F6" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="215" />
-                <ColumnDefinition MinWidth="100" Width="170*" />
-                <ColumnDefinition MinWidth="100" Width="100*" />
+                <ColumnDefinition Width="100*" />
+                <ColumnDefinition Width="200*" />
+                <ColumnDefinition Width="110*" />
             </Grid.ColumnDefinitions>
             <RichTextBox x:Name="richTxtConsole" Grid.Column="0" HorizontalAlignment="Left"  VerticalAlignment="Stretch" Background="#FFE6E6E6" VerticalScrollBarVisibility="Visible" IsUndoEnabled="False" Width="200" Margin="0,0,0,-0.6" >
                 <RichTextBox.Resources>
@@ -191,83 +191,83 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Margin="10,5,0,5" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"><Run Text="Stray Volume"/></TextBlock>
+                    <TextBlock Grid.Row="0" Margin="0,5,10,5" Style="{StaticResource MaterialDesignHeadlineTextBlock}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"><Run Text="Stray Volume"/></TextBlock>
 
                     <Button Grid.Row="0" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,7,0" Background="#FF3A4EE4" BorderBrush="#FF4684DD" Width="24" Height="24" Click="OnPipeSettings" Focusable="False">
                         <materialDesign:PackIcon Kind="GearOutline" Height="20"  Width="24" Focusable="False" />
                     </Button>
                     
-                    <Border Grid.Row="2" Background="White" Padding="15,0,10,10">
+                    <Border Grid.Row="2" Background="White" Padding="15,5,10,15">
                         <StackPanel >
 
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Padding="0">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset101" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset101" Content="0.473" HorizontalContentAlignment="Right" Width="50"/>
-                                    <ToggleButton x:Name="tgl101" Margin="20,0,0,0" IsChecked="True" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
+                                    <Label x:Name="lblAsset01Name" Content="Asset101" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset01Value" Content="0.473" HorizontalContentAlignment="Right" Width="50"/>
+                                    <ToggleButton x:Name="tglAsset01" Margin="20,0,0,0" IsChecked="True" Click="Toggle_Changed" />
                                 </StackPanel>
                             </Border>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset112" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset112" Content="9.181" HorizontalContentAlignment="Right" Width="50"/>
-                                    <ToggleButton x:Name="tgl112" Margin="20,0,0,0" IsChecked="True" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
+                                    <Label x:Name="lblAsset02Name" Content="Asset112" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset02Value" Content="9.181" HorizontalContentAlignment="Right" Width="50"/>
+                                    <ToggleButton x:Name="tglAsset02" Margin="20,0,0,0" IsChecked="True" Click="Toggle_Changed" />
                                 </StackPanel>
                             </Border>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset136" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset136" Content="27.651" HorizontalContentAlignment="Right" Width="50"/>
-                                    <ToggleButton x:Name="tgl136" Margin="20,0,0,0" IsChecked="True" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
+                                    <Label x:Name="lblAsset03Name" Content="Asset136" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset03Value" Content="27.651" HorizontalContentAlignment="Right" Width="50"/>
+                                    <ToggleButton x:Name="tglAsset03" Margin="20,0,0,0" IsChecked="True" Click="Toggle_Changed" />
                                 </StackPanel>
                             </Border>
 
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Margin="0">
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="Asset124" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblAsset124" Content="18.434" HorizontalContentAlignment="Right" Width="50"/>
-                                    <ToggleButton x:Name="tgl124" Margin="20,0,0,0" IsChecked="True" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="P5a" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblP5a" Content="1.23" HorizontalContentAlignment="Right" Width="50"/>
-                                    <ToggleButton x:Name="tglP5a" Margin="20,0,0,0" IsChecked="True" Checked="TglP5a_Checked" Unchecked="TglP5a_Unchecked" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="P6a" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lblP6a" Content="1.19" HorizontalContentAlignment="Right" Width="50"/>
-                                    <ToggleButton x:Name="tglP6a" Margin="20,0,0,0" Checked="TglP6a_Checked" Unchecked="TglP6a_Unchecked" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="1157" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <Label x:Name="lbl1157" Content="1.20" HorizontalContentAlignment="Right" Width="50"/>
-                                    <ToggleButton x:Name="tgl1157" Margin="20,0,0,0" Checked="Tgl1157_Checked" Unchecked="Tgl1157_Unchecked" />
-                                </StackPanel>
-                            </Border>
-
-                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="Extra" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
-                                    <TextBox x:Name="txtStrayExtra" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" TextChanged="TxtStrayExtra_TextChanged" />
-                                    <ToggleButton x:Name="tglStrayExtra" Margin="20,0,0,0" Checked="Toggle_Changed" Unchecked="Toggle_Changed" />
+                                    <Label x:Name="lblAsset04Name" Content="Asset124" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset04Value" Content="18.434" HorizontalContentAlignment="Right" Width="50"/>
+                                    <ToggleButton x:Name="tglAsset04" Margin="20,0,0,0" IsChecked="True" Click="Toggle_Changed" />
                                 </StackPanel>
                             </Border>
 
                             <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label x:Name="lblAsset05Name" Content="P5a" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset05Value" Content="1.23" HorizontalContentAlignment="Right" Width="50"/>
+                                    <ToggleButton x:Name="tglAsset05" Margin="20,0,0,0" IsChecked="True" Click="Toggle_Changed" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label x:Name="lblAsset06Name" Content="P6a" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset06Value" Content="1.19" HorizontalContentAlignment="Right" Width="50"/>
+                                    <ToggleButton x:Name="tglAsset06" Margin="20,0,0,0" Click="Toggle_Changed" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label x:Name="lblAsset07Name" Content="1157" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65"/>
+                                    <Label x:Name="lblAsset07Value" Content="1.20" HorizontalContentAlignment="Right" Width="50"/>
+                                    <ToggleButton x:Name="tglAsset07" Margin="20,0,0,0" Click="Toggle_Changed" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Extra" HorizontalAlignment="Center" VerticalAlignment="Center" Width="53"/>
+                                    <TextBox x:Name="txtAssetExtra" Width="55" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" TextChanged="TxtAssetExtra_TextChanged" PreviewTextInput="TextBox_DecimalOnly" />
+                                    <ToggleButton x:Name="tglAssetExtra" Margin="20,0,0,0" Click="Toggle_Changed" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Margin="0,15,0,0">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0">
-                                    <Label Content="Total" HorizontalAlignment="Center" VerticalAlignment="Center" Width="65" FontWeight="Bold"/>
-                                    <TextBox x:Name="txtStrayTotal" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" />
+                                    <Label Content="Total" HorizontalAlignment="Center" VerticalAlignment="Center" Width="53" FontWeight="Bold"/>
+                                    <TextBox x:Name="txtStrayTotal" Width="55" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" PreviewTextInput="TextBox_DecimalOnly" />
 
                                     <Button x:Name="btnReadStray" Content="R" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnReadStray_Click"  />
                                     <Button x:Name="btnWriteStray" Content="W" Style="{StaticResource MaterialDesignRaisedDarkButton}" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnWriteStray_Click"  />
@@ -299,7 +299,7 @@
 
                                     <Label Content="Maximum system pressure (@10)" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"/>
 
-                                    <TextBox x:Name="txtMaxPressure" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" />
+                                    <TextBox x:Name="txtMaxPressure" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" PreviewTextInput="TextBox_NumberOnly" />
                                     <Button x:Name="btnReadMaxPressure" Content="R" Padding="0" Width="25" Height="20" Margin="0" Click="BtnReadMaxPressure_Click"  />
                                     <Button x:Name="btnWriteMaxPressure" Content="W" Style="{StaticResource MaterialDesignRaisedDarkButton}" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnWriteMaxPressure_Click"  />
                                 </StackPanel>
@@ -309,7 +309,7 @@
 
                                     <Label Content="Flow verification timeout period (@11)" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"/>
 
-                                    <TextBox x:Name="txtTimeout" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" />
+                                    <TextBox x:Name="txtTimeout" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" PreviewTextInput="TextBox_NumberOnly" />
                                     <Button x:Name="btnReadTimeout" Content="R" Padding="0" Width="25" Height="20" Margin="0" Click="BtnReadTimeout_Click"  />
                                     <Button x:Name="btnWriteTimeout" Content="W" Style="{StaticResource MaterialDesignRaisedDarkButton}" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnWriteTimeout_Click"  />
                                 </StackPanel>
@@ -319,7 +319,7 @@
 
                                     <Label Content="Minimum system pressure (@14)" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"/>
 
-                                    <TextBox x:Name="txtMinPressure" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" />
+                                    <TextBox x:Name="txtMinPressure" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" PreviewTextInput="TextBox_NumberOnly" />
                                     <Button x:Name="btnReadMinPressure" Content="R" Padding="0" Width="25" Height="20" Margin="0" Click="BtnReadMinPressure_Click"  />
                                     <Button x:Name="btnWriteMinPressure" Content="W" Style="{StaticResource MaterialDesignRaisedDarkButton}" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnWriteMinPressure_Click"  />
                                 </StackPanel>
@@ -329,7 +329,7 @@
 
                                     <Label Content="Total purge cycles (@17)" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"/>
 
-                                    <TextBox x:Name="txtPurgeCycles" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" />
+                                    <TextBox x:Name="txtPurgeCycles" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" PreviewTextInput="TextBox_NumberOnly" />
                                     <Button x:Name="btnReadPurgeCycles" Content="R" Padding="0" Width="25" Height="20" Margin="0" Click="BtnReadPurgeCycles_Click"  />
                                     <Button x:Name="btnWritePurgeCycles" Content="W" Style="{StaticResource MaterialDesignRaisedDarkButton}" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnWritePurgeCycles_Click"  />
                                 </StackPanel>
@@ -340,7 +340,7 @@
 
                                     <Label Content="Flow stabilization time (@18)" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"/>
 
-                                    <TextBox x:Name="txtStabilizationTime" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" />
+                                    <TextBox x:Name="txtStabilizationTime" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" PreviewTextInput="TextBox_NumberOnly" />
                                     <Button x:Name="btnReadStabilizationTime" Content="R" Padding="0" Width="25" Height="20" Margin="0" Click="BtnReadStabilizationTime_Click"  />
                                     <Button x:Name="btnWriteStabilizationTime" Content="W" Style="{StaticResource MaterialDesignRaisedDarkButton}" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnWriteStabilizationTime_Click"  />
                                 </StackPanel>
@@ -351,7 +351,7 @@
 
                                     <Label Content="Base pressure prior to flow verification (@40)" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" HorizontalAlignment="Left"/>
 
-                                    <TextBox x:Name="txtBasePressure" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" />
+                                    <TextBox x:Name="txtBasePressure" Width="44" HorizontalContentAlignment="Right" Foreground="Black" Text="0" Margin="0,0,6,0" PreviewTextInput="TextBox_NumberOnly" />
                                     <Button x:Name="btnReadBasePressure" Content="R" Padding="0" Width="25" Height="20" Margin="0" Click="BtnReadBasePressure_Click"  />
                                     <Button x:Name="btnWriteBasePressure" Content="W" Style="{StaticResource MaterialDesignRaisedDarkButton}" Padding="0" Width="25" Height="20" Margin="5,0,0,0" Click="BtnWriteBasePressure_Click"  />
                                 </StackPanel>
