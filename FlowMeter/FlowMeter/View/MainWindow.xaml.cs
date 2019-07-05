@@ -24,6 +24,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
+using ToastNotifications;
+using ToastNotifications.Lifetime;
+using ToastNotifications.Messages;
+using ToastNotifications.Position;
+
 namespace FlowMeter
 {
     /// <summary>
@@ -31,6 +36,8 @@ namespace FlowMeter
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly Notifier _notifier;
+
         private ALDSerialPort serial;
 
         private string strBuffer = "";
@@ -38,8 +45,19 @@ namespace FlowMeter
         private enum CalcMode
         {
             NONE,
-            STARTED_EXTERNAL_VOLUME,
-            STARTED_FLOW_RATE
+
+            // external volumne
+            WAITING_ACCEPTION_01,
+            WAITING_READY_TO_STOP_FLOW_200A,
+            WAITING_STOP_FLOW,
+            WAITING_REPORT_STATUS_20,
+            WAITING_REPORT_VOLUME_23,
+
+            // flow rate
+            WAITING_ACCEPTION_00,
+            WAITING_FLOW_VERIFICATION_2000,
+            WAITING_REPORT_FLOW_21,
+            WAITING_REPORT_VARIATION_22,
         }
         private CalcMode calcMode = CalcMode.NONE;
 
@@ -64,12 +82,28 @@ namespace FlowMeter
 
             // start the timer
             DispatcherTimer timer = new DispatcherTimer();
-            timer.Tick += TimerTick;
+            timer.Tick += Timer_Tick;
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Start();
 
-            //var myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(2000));
-            //MySnackbar.MessageQueue = myMessageQueue;
+            // toast notifier
+            _notifier = new Notifier(cfg =>
+            {
+                cfg.PositionProvider = new WindowPositionProvider(
+                    parentWindow: Application.Current.MainWindow,
+                    corner: Corner.TopLeft,
+                    offsetX: 5,
+                    offsetY: 0);
+
+                cfg.LifetimeSupervisor = new TimeAndCountBasedLifetimeSupervisor(
+                    notificationLifetime: TimeSpan.FromSeconds(5),
+                    maximumNotificationCount: MaximumNotificationCount.FromCount(6));
+
+                cfg.Dispatcher = Application.Current.Dispatcher;
+
+                cfg.DisplayOptions.TopMost = false;
+                cfg.DisplayOptions.Width = 250;
+            });
 
         }
 
@@ -83,13 +117,6 @@ namespace FlowMeter
 
             // connect
             tglConnect.IsChecked = true;
-        }
-
-        public void showSnackBarMessage(string str)
-        {
-            
-            MySnackbar.MessageQueue.Dispose();
-            MySnackbar.MessageQueue.Enqueue(str);
         }
 
         private void OnRs232Settings(object sender, RoutedEventArgs e)
@@ -202,37 +229,39 @@ namespace FlowMeter
                         break;
                     // calculate external volume
                     case "@01":
-                        startedExternalVolume();
+                        ExternalVolume_Response_01();
                         break;
                     case "=01":
-                        failedToStartExternalVolume();
+                        ExternalVolume_Failed();
                         break;
                     case "@20":
-                        if (strValue == "0A")
-                            readyExternalVolume();
-                        else if (strValue == "00")
-                            completedFlowRate();
+                        Response_ReportStatus_20(strValue);
                         break;
                     case "@04":
-                        continueExternalVolume();
+                        Response_Continue_04();
                         break;
                     case "@23":
-                        reportExternalVolume(strValue);
+                        Response_Report_23(strValue);
                         break;
                     // calculate flow rate
                     case "@00":
-                        startedFlowRate();
+                        FlowRate_Response_00();
                         break;
                     case "=00":
-                        failedToStartFlowRate();
+                        FlowRate_Failed();
                         break;
                     case "@21":
-                        lblFlowValue.Content = strValue;
+                        ReportFlow_21(strValue);
+                        break;
+                    case "@22":
+                        ReportVariation_22(strValue);
                         break;
                 }
             }));
 
         }
+
+        
 
         private void TglConnect_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -351,12 +380,12 @@ namespace FlowMeter
         {
             if (serial == null || serial.Serial.IsOpen == false)
             {
-                showSnackBarMessage("Serial Port is not opened!");
+                _notifier.ShowWarning("Serial Port is not opened.");
                 return false;
             }
             if (!serial.SendData(strData))
             {
-                showSnackBarMessage("Can not send to the Serial Port!");
+                _notifier.ShowWarning("Can not send to the Serial Port.");
                 return false;
             }
             Log($">>{strData}");
@@ -479,29 +508,8 @@ namespace FlowMeter
             SendToSerial("@40?\r\n");
         }
 
-        private void TimerTick(object sender, EventArgs e)
+        private void BtnExternalVolume_Click(object sender, RoutedEventArgs e)
         {
-            if (calcMode == CalcMode.STARTED_EXTERNAL_VOLUME)
-            {
-                SendToSerial("@20?\r\n");
-            }
-            else if (calcMode == CalcMode.STARTED_FLOW_RATE)
-            {
-                SendToSerial("@20?\r\n");
-            }
-        }
-
-        private void BtnExternalStart_Click(object sender, RoutedEventArgs e)
-        {
-            showSnackBarMessage("Sending [Report status(@20)] after 7 seconds...");
-            Task.Factory.StartNew(() => Thread.Sleep(3000))
-                .ContinueWith((t) =>
-                {
-                    SendToSerial("@20\r\n");
-                }, TaskScheduler.FromCurrentSynchronizationContext());
-
-            return;
-
             PasswordInput passwordInput = new PasswordInput();
             passwordInput.Owner = this;
 #if !DEBUG
@@ -516,126 +524,281 @@ namespace FlowMeter
                 if (!SendToSerial("@01\r\n"))
                     return;
 
-                lblExternalStatus.Content = "Starting...";
+                _notifier.ShowInformation("Sent 'Calculate Volume'(@01) command.");
+
+                calcMode = CalcMode.WAITING_ACCEPTION_01;
+
+                lblExternalStatus.Content = "Waiting acception...";
                 progressExternal.Visibility = Visibility.Visible;
                 btnExternalStart.IsEnabled = false;
             }
-            else
+        }
+
+        private void ExternalVolume_Response_01()
+        {
+            if (calcMode == CalcMode.WAITING_ACCEPTION_01)
             {
-                MessageBox.Show("Can not start!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                _notifier.ShowSuccess($"Accepted 'Calculate Volume'(@01) command.");
+
+                calcMode = CalcMode.WAITING_READY_TO_STOP_FLOW_200A;
+                // sending command '@20?' is doing by timer.
+
+                lblExternalStatus.Content = "Waiting ready to stop flow...";
+                progressExternal.Visibility = Visibility.Visible;
             }
         }
 
-        private void startedExternalVolume()
+        private void ExternalVolume_Failed()
         {
-            calcMode = CalcMode.STARTED_EXTERNAL_VOLUME;
-            lblExternalStatus.Content = "Monitoring...";
-            progressExternal.Visibility = Visibility.Visible;
-        }
+            calcMode = CalcMode.NONE;
 
-        private void failedToStartExternalVolume()
-        {
             lblExternalStatus.Content = "---";
             progressExternal.Visibility = Visibility.Hidden;
             btnExternalStart.IsEnabled = true;
 
-            MessageBox.Show("Command is inappropriate.\n" +
-                            "The GBR3B is currently performing another operation.",
-                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+            _notifier.ShowError("External Volume Failed!");
         }
 
-        private void readyExternalVolume()
+
+        private void Response_ReportStatus_20(string status)
         {
-            calcMode = CalcMode.NONE;
-            lblExternalStatus.Content = "Waiting to stop";
-            btnExternalStop.Visibility = Visibility.Visible;
-            progressExternal.Visibility = Visibility.Hidden;
+            // external volumne status
+            if (calcMode == CalcMode.WAITING_READY_TO_STOP_FLOW_200A)
+            {
+                // ready status
+                if (status == "0A")
+                {
+                    _notifier.ShowSuccess($"Received 'External Volume Status'={status}.");
+
+                    calcMode = CalcMode.WAITING_STOP_FLOW;
+
+                    lblExternalStatus.Content = "Please stop the gas flow.";
+                    btnExternalStop.Visibility = Visibility.Visible;
+                    progressExternal.Visibility = Visibility.Hidden;
+                }
+            }
+            // after external volume, require the report status
+            else if (calcMode == CalcMode.WAITING_REPORT_STATUS_20)
+            {
+                _notifier.ShowSuccess("Received 'Report Status'.");
+                lblExternalStatus.Content = "After 2 secs, 'Report Volume'";
+
+                Task.Factory.StartNew(() => Thread.Sleep(2000))
+                    .ContinueWith((t) =>
+                    {
+                        // send report volume
+                        SendToSerial("@23\r\n");
+                        _notifier.ShowInformation("Sent 'Report Volume'(@23) command.");
+
+                        // calc mode
+                        calcMode = CalcMode.WAITING_REPORT_VOLUME_23;
+                        lblExternalStatus.Content = "Waiting report volume...";
+
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            // flow rate status
+            else if (calcMode == CalcMode.WAITING_FLOW_VERIFICATION_2000)
+            {
+                // if ready
+                if (status == "00")
+                {
+                    _notifier.ShowSuccess($"Received 'Flow Rate Status'={status}!");
+                    lblFlowStatus.Content = "After 2 secs, 'Report Flow'";
+
+                    Task.Factory.StartNew(() => Thread.Sleep(2000))
+                    .ContinueWith((t) =>
+                    {
+                        // send report flow
+                        SendToSerial("@21?\r\n");
+                        _notifier.ShowInformation("Sent 'Report Flow'(@21?) command.");
+
+                        // calc mode
+                        calcMode = CalcMode.WAITING_REPORT_FLOW_21;
+                        lblFlowStatus.Content = "Waiting report flow...";
+
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                }
+            }
+
+
+            // TODO: show status to the UI
         }
 
         private void BtnExternalStop_Click(object sender, RoutedEventArgs e)
         {
-            lblExternalStatus.Content = "Continue";
-            btnExternalStop.Visibility = Visibility.Collapsed;
-            btnExternalStart.IsEnabled = true;
-
-            SendToSerial("@04\r\n");
-        }
-
-        private void continueExternalVolume()
-        {
-            SendToSerial("@23?\r\n");
-        }
-
-        private void reportExternalVolume(string strValue)
-        {
-            double value = Convert.ToDouble(strValue);
-            if (value < 0)
+            if (calcMode == CalcMode.WAITING_STOP_FLOW)
             {
-                lblExternalStatus.Content = "Fail";
-                lblExternalValue.Content = "---";
-            }
-            else
-            {
-                lblExternalStatus.Content = "Success";
-                lblExternalValue.Content = strValue;
+                // send @04
+                SendToSerial("@04\r\n");
+                _notifier.ShowInformation("Sent 'Continue'(@04) command.");
+                lblExternalStatus.Content = "After 7 secs, 'Report Status'";
+
+                // send @20 after 7 seconds
+                Task.Factory.StartNew(() => Thread.Sleep(7000))
+                    .ContinueWith((t) =>
+                    {
+                        SendToSerial("@20?\r\n");
+                        _notifier.ShowInformation("Sent 'Report Status'(@20?) command.");
+                        lblExternalStatus.Content = "Waiting report status...";
+                        
+                        // calc mode
+                        calcMode = CalcMode.WAITING_REPORT_STATUS_20;
+
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
+
+                progressExternal.Visibility = Visibility.Visible;
+                btnExternalStop.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void BtnFlowStart_Click(object sender, RoutedEventArgs e)
+        private void Response_Continue_04()
+        {
+
+        }
+
+        private void Response_Report_23(string strValue)
+        {
+            if (calcMode == CalcMode.WAITING_REPORT_VOLUME_23)
+            {
+                double value = Convert.ToDouble(strValue);
+                if (value < 0)
+                {
+                    _notifier.ShowWarning($"Invalid 'Report Flow'={strValue}");
+
+                    lblExternalStatus.Content = "Fail";
+                    lblExternalValue.Content = "---";
+                }
+                else
+                {
+                    _notifier.ShowSuccess($"Received 'Report Flow'={strValue}");
+
+                    lblExternalStatus.Content = "Success";
+                    lblExternalValue.Content = strValue;
+                }
+
+                // calc mode
+                calcMode = CalcMode.NONE;
+                progressExternal.Visibility = Visibility.Hidden;
+                btnExternalStart.IsEnabled = true;
+            }      
+        }
+
+        private void BtnFlowRate_Click(object sender, RoutedEventArgs e)
         {
             if (calcMode == CalcMode.NONE)
             {
                 if (!SendToSerial("@00\r\n"))
                     return;
 
-                lblFlowStatus.Content = "Starting...";
+                _notifier.ShowInformation("Sent 'Flow Rate'(@00) command.");
+
+                calcMode = CalcMode.WAITING_ACCEPTION_00;
+
+                lblFlowStatus.Content = "Waiting acception...";
                 progressFlow.Visibility = Visibility.Visible;
                 btnFlowStart.IsEnabled = false;
             }
-            else
+        }
+
+        private void FlowRate_Response_00()
+        {
+            if (calcMode == CalcMode.WAITING_ACCEPTION_00)
             {
-                MessageBox.Show("Can not start!", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                _notifier.ShowSuccess($"Accepted 'Flow Rate'(@00) command.");
+
+                calcMode = CalcMode.WAITING_FLOW_VERIFICATION_2000;
+                // sending command '@20?' is doing by timer.
+
+                lblFlowStatus.Content = "Waiting flow verification...";
+                progressFlow.Visibility = Visibility.Visible;
             }
         }
 
-        private void startedFlowRate()
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            calcMode = CalcMode.STARTED_FLOW_RATE;
-            lblFlowStatus.Content = "Monitoring...";
-            progressFlow.Visibility = Visibility.Visible;
+            if (calcMode == CalcMode.WAITING_READY_TO_STOP_FLOW_200A)
+            {
+                SendToSerial("@20?\r\n");
+            }
+            else if (calcMode == CalcMode.WAITING_FLOW_VERIFICATION_2000)
+            {
+                SendToSerial("@20?\r\n");
+            }
         }
 
-        private void completedFlowRate()
-        {
-            calcMode = CalcMode.NONE;
-            lblFlowStatus.Content = "Success";
-            progressFlow.Visibility = Visibility.Hidden;
-            btnFlowStart.IsEnabled = true;
-
-            SendToSerial("@21?\r\n");                       // ask the flow rate
-        }
-
-        private void failedToStartFlowRate()
+        private void FlowRate_Failed()
         {
             lblFlowStatus.Content = "---";
             progressFlow.Visibility = Visibility.Hidden;
             btnFlowStart.IsEnabled = true;
 
-            MessageBox.Show("Command is inappropriate.\n" +
-                            "The GBR3B is currently performing another operation or the external volume has not been calculated yet.",
-                            "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+            _notifier.ShowError("Flow Rate Failed!");
+        }
+
+        private void ReportFlow_21(string strValue)
+        {
+            if (calcMode == CalcMode.WAITING_REPORT_FLOW_21)
+            {
+                _notifier.ShowSuccess($"Received 'Report Flow'={strValue}");
+                lblFlowValue.Content = strValue;
+
+                lblFlowStatus.Content = "After 2 secs, 'Report Variation'"; 
+
+                Task.Factory.StartNew(() => Thread.Sleep(2000))
+                .ContinueWith((t) =>
+                {
+                    // send report flow
+                    SendToSerial("@22?\r\n");
+                    _notifier.ShowInformation("Sent 'Report Variation'(@22?) command.");
+
+                    // calc mode
+                    calcMode = CalcMode.WAITING_REPORT_VARIATION_22;
+                    lblFlowStatus.Content = "Waiting report variation...";
+
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+            }            
+        }
+
+        private void ReportVariation_22(string strValue)
+        {
+            if (calcMode == CalcMode.WAITING_REPORT_VARIATION_22)
+            {
+                double value = Convert.ToDouble(strValue);
+                if (value < 0)
+                {
+                    _notifier.ShowWarning($"Invalid 'Report Variation'={strValue}");
+
+                    lblFlowStatus.Content = "Fail";
+                    lblFlowVariation.Content = "---";
+                }
+                else
+                {
+                    _notifier.ShowSuccess($"Received 'Report Variation'={strValue}");
+
+                    lblFlowStatus.Content = "Success";
+                    lblFlowVariation.Content = strValue;
+                }
+
+                // finish
+                calcMode = CalcMode.NONE;
+
+                progressFlow.Visibility = Visibility.Hidden;
+                btnFlowStart.IsEnabled = true;
+            }
         }
 
         private void BtnContinue_Click(object sender, RoutedEventArgs e)
         {
             SendToSerial("@04\r\n");
 
-            
+            _notifier.ShowSuccess("Sent 'Continue'(@04) command.");
         }
 
         private void BtnAbort_Click(object sender, RoutedEventArgs e)
         {
             SendToSerial("@05\r\n");
+
+            _notifier.ShowWarning("Sent 'Abort'(@05) command.");
 
             calcMode = CalcMode.NONE;
 

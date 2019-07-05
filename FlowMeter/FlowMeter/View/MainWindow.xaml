@@ -173,9 +173,9 @@
         <Grid Grid.Row="2" Background="#FFF7F6F6" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="100*" />
-                <ColumnDefinition Width="200*" />
                 <ColumnDefinition Width="110*" />
+                <ColumnDefinition Width="200*" />
+                <ColumnDefinition Width="135*" />
             </Grid.ColumnDefinitions>
             <RichTextBox x:Name="richTxtConsole" Grid.Column="0" HorizontalAlignment="Left"  VerticalAlignment="Stretch" Background="#FFE6E6E6" VerticalScrollBarVisibility="Visible" IsUndoEnabled="False" Width="200" Margin="0,0,0,-0.6" >
                 <RichTextBox.Resources>
@@ -397,7 +397,7 @@
 
                             </Grid>
 
-                            <Grid Margin="0,8,0.2,0">
+                            <Grid Margin="10,8,10,0">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
@@ -413,6 +413,15 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
+                                <!--border-->
+                                <Border Grid.Row="0" Grid.ColumnSpan="8" BorderBrush="Gray" BorderThickness="1" />
+                                <Border Grid.Row="1" Grid.ColumnSpan="8" BorderBrush="Gray" BorderThickness="1,0,1,1" />
+
+                                <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Gray" BorderThickness="1,0" />
+                                <Border Grid.Column="3" Grid.RowSpan="2" BorderBrush="Gray" BorderThickness="1,0" />
+                                <Border Grid.Column="5" Grid.RowSpan="2" BorderBrush="Gray" BorderThickness="1,0" />
+                                <Border Grid.Column="7" Grid.RowSpan="2" BorderBrush="Gray" BorderThickness="1,0,0,0" />
+
                                 <Label Grid.Column="0" Content="D7" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <Label Grid.Column="1" Content="D6" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <Label Grid.Column="2" Content="D5" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -422,14 +431,14 @@
                                 <Label Grid.Column="6" Content="D1" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <Label Grid.Column="7" Content="D0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                                <Label x:Name="lblD7" Grid.Row="1" Grid.Column="0" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label x:Name="lblD6" Grid.Row="1" Grid.Column="1" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label x:Name="lblD5" Grid.Row="1" Grid.Column="2" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label x:Name="lblD4" Grid.Row="1" Grid.Column="3" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label x:Name="lblD3" Grid.Row="1" Grid.Column="4" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label x:Name="lblD2" Grid.Row="1" Grid.Column="5" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label x:Name="lblD1" Grid.Row="1" Grid.Column="6" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <Label x:Name="lblD0" Grid.Row="1" Grid.Column="7" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Label x:Name="lblD7" Grid.Row="1" Grid.Column="0" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Label x:Name="lblD6" Grid.Row="1" Grid.Column="1" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Label x:Name="lblD5" Grid.Row="1" Grid.Column="2" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Label x:Name="lblD4" Grid.Row="1" Grid.Column="3" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Label x:Name="lblD3" Grid.Row="1" Grid.Column="4" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Label x:Name="lblD2" Grid.Row="1" Grid.Column="5" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Label x:Name="lblD1" Grid.Row="1" Grid.Column="6" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                <Label x:Name="lblD0" Grid.Row="1" Grid.Column="7" Content="0" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
                             </Grid>
                         </StackPanel>
                     </Border>
@@ -453,17 +462,17 @@
                     <StackPanel Grid.Row="2" Background="White" >
                         <Label Content="External Volume" FontSize="14" />
 
-                        <Button x:Name="btnExternalStart" Content="Start" Click="BtnExternalStart_Click" Height="28" Margin="20,2" FontSize="14"/>
+                        <Button x:Name="btnExternalStart" Content="Start" Click="BtnExternalVolume_Click" Height="28" Margin="20,2" FontSize="14"/>
                         <Button x:Name="btnExternalStop" Content="Stop the gas flow" materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
     materialDesign:ButtonProgressAssist.IsIndeterminate="True" Click="BtnExternalStop_Click" Visibility="Collapsed" Height="28" Margin="20,2" FontSize="14"/>
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Status :" Width="90" HorizontalContentAlignment="Right"/>
+                            <ProgressBar x:Name="progressExternal" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" HorizontalAlignment="Right" Margin="5,0,0,0" />
+                            <Label Content="Status :" Width="48" HorizontalContentAlignment="Right"/>
                             <Label x:Name="lblExternalStatus" Content="---" />
-                            <ProgressBar x:Name="progressExternal" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" />
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" >
-                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="90" HorizontalContentAlignment="Right"/>
+                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="69" HorizontalContentAlignment="Right"/>
                             <Label x:Name="lblExternalValue" Content="---" />
                         </StackPanel>
 
@@ -473,21 +482,21 @@
                     <StackPanel Grid.Row="3" Background="White" >
                         <Label Content="Flow Rate" FontSize="14" />
 
-                        <Button x:Name="btnFlowStart" Content="Start" Click="BtnFlowStart_Click" Height="28" Margin="20,2" FontSize="14"/>
+                        <Button x:Name="btnFlowStart" Content="Start" Click="BtnFlowRate_Click" Height="28" Margin="20,2" FontSize="14"/>
 
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="Status :" Width="90" HorizontalContentAlignment="Right"/>
+                        <StackPanel Orientation="Horizontal" Margin="0">
+                            <ProgressBar x:Name="progressFlow" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" Margin="5,0,0,0" HorizontalAlignment="Right" Padding="0" HorizontalContentAlignment="Right" />
+                            <Label Content="Status :" Width="48" HorizontalContentAlignment="Right"/>
                             <Label x:Name="lblFlowStatus" Content="---" />
-                            <ProgressBar x:Name="progressFlow" Style="{StaticResource MaterialDesignCircularProgressBar}" Value="0" IsIndeterminate="True" Width="15" Height="15" Visibility="Hidden" />
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" >
-                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="90" HorizontalContentAlignment="Right"/>
+                            <Label Content="Value :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="69" HorizontalContentAlignment="Right"/>
                             <Label x:Name="lblFlowValue" Content="---" />
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" >
-                            <Label Content="Variation :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="90" HorizontalContentAlignment="Right"/>
+                            <Label Content="Variation :" HorizontalAlignment="Center" VerticalAlignment="Center" Width="69" HorizontalContentAlignment="Right"/>
                             <Label x:Name="lblFlowVariation" Content="---" />
                         </StackPanel>
 
