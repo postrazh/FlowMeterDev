@@ -105,18 +105,96 @@ namespace FlowMeter
                 cfg.DisplayOptions.Width = 250;
             });
 
-        }
-
-        protected override void OnInitialized(EventArgs e)
-        {
-            base.OnInitialized(e);
-
             // load values
             LoadAssetsLabels();
             LoadToggleState();
 
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
             // connect
             tglConnect.IsChecked = true;
+
+            // read initial values
+            ReadInitialValues();
+        }
+
+        private void ReadInitialValues()
+        {
+            bool isReading = true;
+            if (!CheckSerialPort())
+                isReading = false;
+
+            if (isReading)
+                _notifier.ShowInformation("Start reading values...");
+
+            Task.Factory
+                // 1
+                .StartNew(() => Thread.Sleep(2000))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        SendToSerial("@10?\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext())
+                // 2
+                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        SendToSerial("@11?\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext())
+                // 3
+                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        SendToSerial("@14?\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext())
+                // 4
+                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        SendToSerial("@17?\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext())
+                // 5
+                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        SendToSerial("@18?\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext())
+                // 6
+                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        SendToSerial("@40?\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext())
+                // show finish toast
+                .ContinueWith((t) => Thread.Sleep(3000))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        _notifier.ShowInformation("Finished reading values.");
+                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void OnRs232Settings(object sender, RoutedEventArgs e)
@@ -153,21 +231,42 @@ namespace FlowMeter
 
         private void TglConnect_Checked(object sender, RoutedEventArgs e)
         {
-            serial = new ALDSerialPort(SettingsManager.getInstance().CurrentSettings.SerialConfig);
+            var config = SettingsManager.getInstance().CurrentSettings.SerialConfig;
+            serial = new ALDSerialPort(config);
             try
             {
                 serial.OpenPort();
 
                 serial.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(serial_DataReceived);
                 serial.ErrorReceived += new System.IO.Ports.SerialErrorReceivedEventHandler(serial_ErrorReceived);
+
+                _notifier.ShowSuccess($"Successfully connected to the serial port : {config.PortName}.");
             }
             catch
             {
-                MessageBox.Show("Cannot open port.", "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+                _notifier.ShowError("Can not open the serial port.");
 
-                serial = null;
-                tglConnect.IsChecked = false;
+                Close_SerialPort();
             }
+        }
+
+        private void TglConnect_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Close_SerialPort();
+
+            var tglSender = sender as ToggleButton;
+            if (tglSender.IsFocused)
+                _notifier.ShowWarning("Closed the the Serial Port.");
+        }
+
+        private void Close_SerialPort()
+        {
+            if (serial != null)
+            {
+                serial.ClosePort();
+                serial = null;
+            }
+            tglConnect.IsChecked = false;
         }
 
         private void serial_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
@@ -259,17 +358,6 @@ namespace FlowMeter
                 }
             }));
 
-        }
-
-        
-
-        private void TglConnect_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (serial != null)
-            {
-                serial.ClosePort();
-                serial = null;
-            }
         }
 
         private void TxtAssetExtra_TextChanged(object sender, TextChangedEventArgs e)
@@ -378,19 +466,37 @@ namespace FlowMeter
 
         private bool SendToSerial(string strData)
         {
-            if (serial == null || serial.Serial.IsOpen == false)
+            if (!CheckSerialPort())
             {
                 _notifier.ShowWarning("Serial Port is not opened.");
                 return false;
-            }
+            }   
+
             if (!serial.SendData(strData))
             {
                 _notifier.ShowWarning("Can not send to the Serial Port.");
+
+                Close_SerialPort();
+
                 return false;
             }
             Log($">>{strData}");
             
             return true;
+        }
+
+        private bool CheckSerialPort()
+        {
+            if (serial != null && serial.Serial.IsOpen == true)
+            {
+                return true;
+            }
+            else
+            {
+                serial = null;
+                tglConnect.IsChecked = false;
+                return false;
+            }
         }
 
         private void Log(string str)
@@ -510,17 +616,37 @@ namespace FlowMeter
 
         private void BtnExternalVolume_Click(object sender, RoutedEventArgs e)
         {
-            PasswordInput passwordInput = new PasswordInput();
-            passwordInput.Owner = this;
+            if (!CheckSerialPort())
+            {
+                _notifier.ShowWarning("Serial Port is not opened.");
+                return;
+            }
+
+            if (calcMode == CalcMode.NONE)
+            {
+                Double flowVerificationTime = double.Parse(txtTimeout.Text);
+                if (flowVerificationTime < 600)
+                {
+                    System.Windows.Style style = new System.Windows.Style();
+                    style.Setters.Add(new Setter(Xceed.Wpf.Toolkit.MessageBox.YesButtonContentProperty, "Continue"));
+                    style.Setters.Add(new Setter(Xceed.Wpf.Toolkit.MessageBox.NoButtonContentProperty, "Abort"));
+                    MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show("The flow verification time might be too low, recommend 600 seconds.", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes, style);
+                    if (result == MessageBoxResult.No)
+                    {
+                        if (SendToSerial("@20?\r\n"))
+                            _notifier.ShowInformation("Sent 'Report Status'(@20?) command.");
+                        return;
+                    }
+                }
+
+                PasswordInput passwordInput = new PasswordInput();
+                passwordInput.Owner = this;
 #if !DEBUG
             if (passwordInput.ShowDialog() != true)
             {
                 return;
             }
 #endif
-
-            if (calcMode == CalcMode.NONE)
-            {
                 if (!SendToSerial("@01\r\n"))
                     return;
 
@@ -587,8 +713,8 @@ namespace FlowMeter
                     .ContinueWith((t) =>
                     {
                         // send report volume
-                        SendToSerial("@23\r\n");
-                        _notifier.ShowInformation("Sent 'Report Volume'(@23) command.");
+                        if (SendToSerial("@23\r\n"))
+                            _notifier.ShowInformation("Sent 'Report Volume'(@23) command.");
 
                         // calc mode
                         calcMode = CalcMode.WAITING_REPORT_VOLUME_23;
@@ -609,8 +735,8 @@ namespace FlowMeter
                     .ContinueWith((t) =>
                     {
                         // send report flow
-                        SendToSerial("@21?\r\n");
-                        _notifier.ShowInformation("Sent 'Report Flow'(@21?) command.");
+                        if (SendToSerial("@21?\r\n"))
+                            _notifier.ShowInformation("Sent 'Report Flow'(@21?) command.");
 
                         // calc mode
                         calcMode = CalcMode.WAITING_REPORT_FLOW_21;
@@ -674,16 +800,16 @@ namespace FlowMeter
             if (calcMode == CalcMode.WAITING_STOP_FLOW)
             {
                 // send @04
-                SendToSerial("@04\r\n");
-                _notifier.ShowInformation("Sent 'Continue'(@04) command.");
+                if (SendToSerial("@04\r\n"))
+                    _notifier.ShowInformation("Sent 'Continue'(@04) command.");
                 lblExternalStatus.Content = "After 7 secs, 'Report Status'";
 
                 // send @20 after 7 seconds
                 Task.Factory.StartNew(() => Thread.Sleep(7000))
                     .ContinueWith((t) =>
                     {
-                        SendToSerial("@20?\r\n");
-                        _notifier.ShowInformation("Sent 'Report Status'(@20?) command.");
+                        if (SendToSerial("@20?\r\n"))
+                            _notifier.ShowInformation("Sent 'Report Status'(@20?) command.");
                         lblExternalStatus.Content = "Waiting report status...";
                         
                         // calc mode
@@ -730,8 +856,20 @@ namespace FlowMeter
 
         private void BtnFlowRate_Click(object sender, RoutedEventArgs e)
         {
+            if (!CheckSerialPort())
+            {
+                _notifier.ShowWarning("Serial Port is not opened.");
+                return;
+            }
+
             if (calcMode == CalcMode.NONE)
             {
+                Double flowVerificationTime = double.Parse(txtTimeout.Text);
+                if (flowVerificationTime > 60)
+                {
+                    MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show("The flow verification is over 60 seconds.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+
                 if (!SendToSerial("@00\r\n"))
                     return;
 
@@ -793,8 +931,8 @@ namespace FlowMeter
                 .ContinueWith((t) =>
                 {
                     // send report flow
-                    SendToSerial("@22?\r\n");
-                    _notifier.ShowInformation("Sent 'Report Variation'(@22?) command.");
+                    if (SendToSerial("@22?\r\n"))
+                        _notifier.ShowInformation("Sent 'Report Variation'(@22?) command.");
 
                     // calc mode
                     calcMode = CalcMode.WAITING_REPORT_VARIATION_22;
@@ -834,16 +972,14 @@ namespace FlowMeter
 
         private void BtnContinue_Click(object sender, RoutedEventArgs e)
         {
-            SendToSerial("@04\r\n");
-
-            _notifier.ShowSuccess("Sent 'Continue'(@04) command.");
+            if (SendToSerial("@04\r\n"))
+                _notifier.ShowInformation("Sent 'Continue'(@04) command.");
         }
 
         private void BtnAbort_Click(object sender, RoutedEventArgs e)
         {
-            SendToSerial("@05\r\n");
-
-            _notifier.ShowWarning("Sent 'Abort'(@05) command.");
+            if (SendToSerial("@05\r\n"))
+                _notifier.ShowInformation("Sent 'Abort'(@05) command.");
 
             calcMode = CalcMode.NONE;
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlowMeter.View"
         mc:Ignorable="d"
-        Title="PipeSettings" Height="404.4" Width="345.2" FontSize="14"
+        Title="Asset Settings" Height="404.4" Width="345.2" FontSize="14"
         WindowStartupLocation="CenterOwner">
     <StackPanel Margin="0,0,0.4,0" Orientation="Vertical">
         <Grid Margin="0,35,0.4,0">

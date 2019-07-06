@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlowMeter"
         mc:Ignorable="d"
-        Title="SerialSettings" Height="338.8" Width="320" ResizeMode="NoResize" SourceInitialized="Window_SourceInitialized" WindowStartupLocation="CenterOwner">
+        Title="Serial Settings" Height="338.8" Width="320" ResizeMode="NoResize" SourceInitialized="Window_SourceInitialized" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
