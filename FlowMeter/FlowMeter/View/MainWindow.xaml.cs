@@ -660,15 +660,18 @@ namespace FlowMeter
             }
 #endif
                 calcMode = CalcMode.WAITING_ACCEPTION_01;
-
-                if (!SendToSerial("@01\r\n"))
-                    return;
-
-                _notifier.ShowInformation("Sent 'Calculate Volume'(@01) command.");
-
                 lblExternalStatus.Content = "Waiting...";
+                lblExternalValue.Content = "---";
                 progressExternal.Visibility = Visibility.Visible;
                 btnExternalStart.IsEnabled = false;
+
+                if (SendToSerial("@01\r\n"))
+                    _notifier.ShowInformation("Sent 'Calculate Volume'(@01) command.");
+                {
+                    lblExternalStatus.Content = "---";
+                    progressExternal.Visibility = Visibility.Hidden;
+                    btnExternalStart.IsEnabled = true;
+                }
             }
         }
 
@@ -882,15 +885,20 @@ namespace FlowMeter
                 }
 
                 calcMode = CalcMode.WAITING_ACCEPTION_00;
-
-                if (!SendToSerial("@00\r\n"))
-                    return;
-
-                _notifier.ShowInformation("Sent 'Flow Rate'(@00) command.");
-
                 lblFlowStatus.Content = "Waiting acception...";
+                lblFlowValue.Content = "---";
                 progressFlow.Visibility = Visibility.Visible;
                 btnFlowStart.IsEnabled = false;
+
+                if (SendToSerial("@00\r\n"))
+                    _notifier.ShowInformation("Sent 'Flow Rate'(@00) command.");
+                else
+                {
+                    calcMode = CalcMode.NONE;
+                    lblFlowStatus.Content = "---";
+                    progressFlow.Visibility = Visibility.Hidden;
+                    btnFlowStart.IsEnabled = true;
+                }
             }
         }
 
