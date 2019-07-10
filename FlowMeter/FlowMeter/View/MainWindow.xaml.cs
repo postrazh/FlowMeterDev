@@ -840,8 +840,8 @@ namespace FlowMeter
 
         private void Response_Report_23(string strValue)
         {
-            if (calcMode == CalcMode.WAITING_REPORT_VOLUME_23)
-            {
+            //if (calcMode == CalcMode.WAITING_REPORT_VOLUME_23)
+            //{
                 double value = Convert.ToDouble(strValue);
                 if (value < 0)
                 {
@@ -862,7 +862,7 @@ namespace FlowMeter
                 calcMode = CalcMode.NONE;
                 progressExternal.Visibility = Visibility.Hidden;
                 btnExternalStart.IsEnabled = true;
-            }      
+            //}      
         }
 
         private void BtnFlowRate_Click(object sender, RoutedEventArgs e)
