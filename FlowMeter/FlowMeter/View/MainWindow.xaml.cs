@@ -188,6 +188,15 @@ namespace FlowMeter
                     if (isReading)
                         SendToSerial("@40?\r\n");
                 }, TaskScheduler.FromCurrentSynchronizationContext())
+                // 7 : read external volume
+                .ContinueWith((t) => Thread.Sleep(readingInterval))
+                .ContinueWith((t) =>
+                {
+                    if (!CheckSerialPort())
+                        isReading = false;
+                    if (isReading)
+                        SendToSerial("@23?\r\n");
+                }, TaskScheduler.FromCurrentSynchronizationContext())
                 // show finish toast
                 .ContinueWith((t) => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
@@ -657,7 +666,7 @@ namespace FlowMeter
 
                 _notifier.ShowInformation("Sent 'Calculate Volume'(@01) command.");
 
-                lblExternalStatus.Content = "Waiting acception...";
+                lblExternalStatus.Content = "Waiting...";
                 progressExternal.Visibility = Visibility.Visible;
                 btnExternalStart.IsEnabled = false;
             }
