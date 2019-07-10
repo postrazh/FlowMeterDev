@@ -203,6 +203,7 @@ namespace FlowMeter
             dlg.Owner = this;
             if (dlg.ShowDialog() == true)
             {
+                lblPortName.Content = SettingsManager.getInstance().CurrentSettings.SerialConfig.PortName;
                 Debug.WriteLine("Changed the serial port configuration.");
             }
         }

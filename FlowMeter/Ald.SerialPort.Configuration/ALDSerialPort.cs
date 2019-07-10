@@ -93,25 +93,27 @@ namespace Ald.SerialPort.Configuration
         }
         public void ClosePort()
         {
+            if (serial != null && serial.IsOpen)
+            {
+                serial.ErrorReceived -= new Ports.SerialErrorReceivedEventHandler(serial_ErrorReceived);
+                serial.DataReceived -= new Ports.SerialDataReceivedEventHandler(serial_DataReceived);
 
-            serial.ErrorReceived -= new Ports.SerialErrorReceivedEventHandler(serial_ErrorReceived);
-            serial.DataReceived -= new Ports.SerialDataReceivedEventHandler(serial_DataReceived);
 
-            serial.DiscardInBuffer();
-            serial.DiscardOutBuffer();
-            var stream = serial.BaseStream;
-            stream.Flush();
-            stream.Close();
-            stream.Dispose();
+                serial.DiscardInBuffer();
+                serial.DiscardOutBuffer();
+                var stream = serial.BaseStream;
+                stream.Flush();
+                stream.Close();
+                stream.Dispose();
 
-            serial.Close();
+                serial.Close();
 
-            serial.Dispose();
+                serial.Dispose();
 
-            serial = null;
-            stream = null;
-            GC.Collect();
-
+                serial = null;
+                stream = null;
+                GC.Collect();
+            }
         }
         public bool IsOpen
         {
