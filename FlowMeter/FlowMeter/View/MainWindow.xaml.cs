@@ -124,6 +124,8 @@ namespace FlowMeter
 
         private void ReadInitialValues()
         {
+            int readingInterval = 200;
+
             bool isReading = true;
             if (!CheckSerialPort())
                 isReading = false;
@@ -133,7 +135,7 @@ namespace FlowMeter
 
             Task.Factory
                 // 1
-                .StartNew(() => Thread.Sleep(2000))
+                .StartNew(() => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
                 {
                     if (!CheckSerialPort())
@@ -142,7 +144,7 @@ namespace FlowMeter
                         SendToSerial("@10?\r\n");
                 }, TaskScheduler.FromCurrentSynchronizationContext())
                 // 2
-                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
                 {
                     if (!CheckSerialPort())
@@ -151,7 +153,7 @@ namespace FlowMeter
                         SendToSerial("@11?\r\n");
                 }, TaskScheduler.FromCurrentSynchronizationContext())
                 // 3
-                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
                 {
                     if (!CheckSerialPort())
@@ -160,7 +162,7 @@ namespace FlowMeter
                         SendToSerial("@14?\r\n");
                 }, TaskScheduler.FromCurrentSynchronizationContext())
                 // 4
-                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
                 {
                     if (!CheckSerialPort())
@@ -169,7 +171,7 @@ namespace FlowMeter
                         SendToSerial("@17?\r\n");
                 }, TaskScheduler.FromCurrentSynchronizationContext())
                 // 5
-                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
                 {
                     if (!CheckSerialPort())
@@ -178,7 +180,7 @@ namespace FlowMeter
                         SendToSerial("@18?\r\n");
                 }, TaskScheduler.FromCurrentSynchronizationContext())
                 // 6
-                .ContinueWith((t) => Thread.Sleep(2000))
+                .ContinueWith((t) => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
                 {
                     if (!CheckSerialPort())
@@ -187,7 +189,7 @@ namespace FlowMeter
                         SendToSerial("@40?\r\n");
                 }, TaskScheduler.FromCurrentSynchronizationContext())
                 // show finish toast
-                .ContinueWith((t) => Thread.Sleep(3000))
+                .ContinueWith((t) => Thread.Sleep(readingInterval))
                 .ContinueWith((t) =>
                 {
                     if (!CheckSerialPort())
@@ -648,12 +650,12 @@ namespace FlowMeter
                 return;
             }
 #endif
+                calcMode = CalcMode.WAITING_ACCEPTION_01;
+
                 if (!SendToSerial("@01\r\n"))
                     return;
 
                 _notifier.ShowInformation("Sent 'Calculate Volume'(@01) command.");
-
-                calcMode = CalcMode.WAITING_ACCEPTION_01;
 
                 lblExternalStatus.Content = "Waiting acception...";
                 progressExternal.Visibility = Visibility.Visible;
@@ -713,12 +715,12 @@ namespace FlowMeter
                 Task.Factory.StartNew(() => Thread.Sleep(2000))
                     .ContinueWith((t) =>
                     {
-                        // send report volume
-                        if (SendToSerial("@23\r\n"))
-                            _notifier.ShowInformation("Sent 'Report Volume'(@23) command.");
-
-                        // calc mode
                         calcMode = CalcMode.WAITING_REPORT_VOLUME_23;
+
+                        // send report volume
+                        if (SendToSerial("@23?\r\n"))
+                            _notifier.ShowInformation("Sent 'Report Volume'(@23?) command.");
+
                         lblExternalStatus.Content = "Waiting report volume...";
 
                     }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -735,12 +737,12 @@ namespace FlowMeter
                     Task.Factory.StartNew(() => Thread.Sleep(2000))
                     .ContinueWith((t) =>
                     {
+                        calcMode = CalcMode.WAITING_REPORT_FLOW_21;
+
                         // send report flow
                         if (SendToSerial("@21?\r\n"))
                             _notifier.ShowInformation("Sent 'Report Flow'(@21?) command.");
 
-                        // calc mode
-                        calcMode = CalcMode.WAITING_REPORT_FLOW_21;
                         lblFlowStatus.Content = "Waiting report flow...";
 
                     }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -809,13 +811,12 @@ namespace FlowMeter
                 Task.Factory.StartNew(() => Thread.Sleep(7000))
                     .ContinueWith((t) =>
                     {
+                        calcMode = CalcMode.WAITING_REPORT_STATUS_20;
+
                         if (SendToSerial("@20?\r\n"))
                             _notifier.ShowInformation("Sent 'Report Status'(@20?) command.");
                         lblExternalStatus.Content = "Waiting report status...";
                         
-                        // calc mode
-                        calcMode = CalcMode.WAITING_REPORT_STATUS_20;
-
                     }, TaskScheduler.FromCurrentSynchronizationContext());
 
                 progressExternal.Visibility = Visibility.Visible;
@@ -871,12 +872,12 @@ namespace FlowMeter
                     MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show("The flow verification is over 60 seconds.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
 
+                calcMode = CalcMode.WAITING_ACCEPTION_00;
+
                 if (!SendToSerial("@00\r\n"))
                     return;
 
                 _notifier.ShowInformation("Sent 'Flow Rate'(@00) command.");
-
-                calcMode = CalcMode.WAITING_ACCEPTION_00;
 
                 lblFlowStatus.Content = "Waiting acception...";
                 progressFlow.Visibility = Visibility.Visible;
@@ -931,12 +932,12 @@ namespace FlowMeter
                 Task.Factory.StartNew(() => Thread.Sleep(2000))
                 .ContinueWith((t) =>
                 {
+                    calcMode = CalcMode.WAITING_REPORT_VARIATION_22;
+
                     // send report flow
                     if (SendToSerial("@22?\r\n"))
                         _notifier.ShowInformation("Sent 'Report Variation'(@22?) command.");
 
-                    // calc mode
-                    calcMode = CalcMode.WAITING_REPORT_VARIATION_22;
                     lblFlowStatus.Content = "Waiting report variation...";
 
                 }, TaskScheduler.FromCurrentSynchronizationContext());
@@ -979,10 +980,10 @@ namespace FlowMeter
 
         private void BtnAbort_Click(object sender, RoutedEventArgs e)
         {
+            calcMode = CalcMode.NONE;
+
             if (SendToSerial("@05\r\n"))
                 _notifier.ShowInformation("Sent 'Abort'(@05) command.");
-
-            calcMode = CalcMode.NONE;
 
             lblExternalStatus.Content = "---";
             btnExternalStop.Visibility = Visibility.Collapsed;
