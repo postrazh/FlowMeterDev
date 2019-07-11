@@ -302,16 +302,31 @@ namespace FlowMeter
                 return;
             }
 
+            // splite the received string
+            string[] commandList = strFull.Split('\r');
+            foreach (string command in commandList)
+            {
+                string trimmed = command.Trim('\r', '\n');
+
+                if (string.IsNullOrEmpty(trimmed))
+                    continue;
+
+                // Execute one command
+                ExecuteOneCommand(trimmed);
+            }            
+        }
+
+        private void ExecuteOneCommand(string strOneCommand)
+        {
             // log to rich textbox
             this.Dispatcher.Invoke(new Action(delegate
             {
-                Log(strFull);
+                Log(strOneCommand);
             }));
 
-
             // extract the command
-            string command = strFull.Substring(0, 3);
-            string strValue = strFull.Substring(3).TrimStart('+').TrimEnd('\r', '\n');
+            string command = strOneCommand.Substring(0, 3);
+            string strValue = strOneCommand.Substring(3);     // .TrimStart('+'); .TrimEnd('\r', '\n');
 
             this.Dispatcher.Invoke(new Action(delegate
             {
@@ -369,7 +384,6 @@ namespace FlowMeter
                         break;
                 }
             }));
-
         }
 
         private void TxtAssetExtra_TextChanged(object sender, TextChangedEventArgs e)
@@ -845,7 +859,9 @@ namespace FlowMeter
         {
             //if (calcMode == CalcMode.WAITING_REPORT_VOLUME_23)
             //{
-                double value = Convert.ToDouble(strValue);
+                double value = -1;
+                double.TryParse(strValue, out value);
+
                 if (value < 0)
                 {
                     _notifier.ShowWarning($"Invalid 'Report Flow'={strValue}");
