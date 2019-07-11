@@ -391,9 +391,9 @@
                                 <Label Grid.Column="0" Grid.Row="1" Content="Current Operation : " HorizontalAlignment="Right" FontSize="14" Padding="5,2"/>
                                 <Label Grid.Column="0" Grid.Row="2" Content="Last Operation : " HorizontalAlignment="Right" FontSize="14" Padding="5,2"/>
 
-                                <Label x:Name="lblStatusOperatingMode" Grid.Column="1" Grid.Row="0" Content="Idle" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
-                                <Label x:Name="lblStatusCurrentOperation" Grid.Column="1" Grid.Row="1" Content="Busy" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
-                                <Label x:Name="lblStatusLastOperation" Grid.Column="1" Grid.Row="2" Content="No error" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
+                                <Label x:Name="lblStatusOperatingMode" Grid.Column="1" Grid.Row="0" Content="---" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
+                                <Label x:Name="lblStatusCurrentOperation" Grid.Column="1" Grid.Row="1" Content="---" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
+                                <Label x:Name="lblStatusLastOperation" Grid.Column="1" Grid.Row="2" Content="---" HorizontalAlignment="Left" FontSize="14" Padding="5,2"/>
 
                             </Grid>
 
