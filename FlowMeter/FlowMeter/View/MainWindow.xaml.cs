@@ -742,7 +742,6 @@ namespace FlowMeter
                     .ContinueWith((t) =>
                     {
                         calcMode = CalcMode.WAITING_REPORT_VOLUME_23;
-
                         lblExternalStatus.Content = "Waiting report volume...";
 
                         // send report volume
@@ -764,12 +763,11 @@ namespace FlowMeter
                     .ContinueWith((t) =>
                     {
                         calcMode = CalcMode.WAITING_REPORT_FLOW_21;
+                        lblFlowStatus.Content = "Waiting report flow...";
 
                         // send report flow
                         if (SendToSerial("@21?\r\n"))
                             _notifier.ShowInformation("Sent 'Report Flow'(@21?) command.");
-
-                        lblFlowStatus.Content = "Waiting report flow...";
 
                     }, TaskScheduler.FromCurrentSynchronizationContext());
                 }
@@ -831,17 +829,17 @@ namespace FlowMeter
                 // send @04
                 if (SendToSerial("@04\r\n"))
                     _notifier.ShowInformation("Sent 'Continue'(@04) command.");
-                lblExternalStatus.Content = "After 7 secs, 'Report Status'";
 
-                // send @20 after 7 seconds
+                // send @20? after 7 seconds
+                lblExternalStatus.Content = "After 7 secs, 'Report Status'";
                 Task.Factory.StartNew(() => Thread.Sleep(7000))
                     .ContinueWith((t) =>
                     {
                         calcMode = CalcMode.WAITING_REPORT_STATUS_20;
+                        lblExternalStatus.Content = "Waiting report status...";
 
                         if (SendToSerial("@20?\r\n"))
                             _notifier.ShowInformation("Sent 'Report Status'(@20?) command.");
-                        lblExternalStatus.Content = "Waiting report status...";
                         
                     }, TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -966,12 +964,11 @@ namespace FlowMeter
                 .ContinueWith((t) =>
                 {
                     calcMode = CalcMode.WAITING_REPORT_VARIATION_22;
+                    lblFlowStatus.Content = "Waiting report variation...";
 
                     // send report flow
                     if (SendToSerial("@22?\r\n"))
                         _notifier.ShowInformation("Sent 'Report Variation'(@22?) command.");
-
-                    lblFlowStatus.Content = "Waiting report variation...";
 
                 }, TaskScheduler.FromCurrentSynchronizationContext());
             }            
@@ -1015,9 +1012,6 @@ namespace FlowMeter
         {
             calcMode = CalcMode.NONE;
 
-            if (SendToSerial("@05\r\n"))
-                _notifier.ShowInformation("Sent 'Abort'(@05) command.");
-
             lblExternalStatus.Content = "---";
             btnExternalStop.Visibility = Visibility.Collapsed;
             btnExternalStart.IsEnabled = true;
@@ -1026,6 +1020,9 @@ namespace FlowMeter
             lblFlowStatus.Content = "---";
             btnFlowStart.IsEnabled = true;
             progressFlow.Visibility = Visibility.Hidden;
+
+            if (SendToSerial("@05\r\n"))
+                _notifier.ShowInformation("Sent 'Abort'(@05) command.");
         }
 
         // load asset labels
