@@ -735,20 +735,23 @@ namespace FlowMeter
             // after external volume, require the report status
             else if (calcMode == CalcMode.WAITING_REPORT_STATUS_20)
             {
-                _notifier.ShowSuccess("Received 'Report Status' = 0x{status}.");
-                lblExternalStatus.Content = "After 2 secs, 'Report Volume'";
+                if (status == "00")
+                {
+                    _notifier.ShowSuccess("Received 'Report Status' = 0x{status}.");
+                    lblExternalStatus.Content = "After 1 secs, 'Report Volume'";
 
-                Task.Factory.StartNew(() => Thread.Sleep(2000))
-                    .ContinueWith((t) =>
-                    {
-                        calcMode = CalcMode.WAITING_REPORT_VOLUME_23;
-                        lblExternalStatus.Content = "Waiting report volume...";
+                    Task.Factory.StartNew(() => Thread.Sleep(1000))
+                        .ContinueWith((t) =>
+                        {
+                            calcMode = CalcMode.WAITING_REPORT_VOLUME_23;
+                            lblExternalStatus.Content = "Waiting report volume...";
 
                         // send report volume
                         if (SendToSerial("@23?\r\n"))
-                            _notifier.ShowInformation("Sent 'Report Volume'(@23?) command.");
+                                _notifier.ShowInformation("Sent 'Report Volume'(@23?) command.");
 
-                    }, TaskScheduler.FromCurrentSynchronizationContext());
+                        }, TaskScheduler.FromCurrentSynchronizationContext());
+                }
             }
             // flow rate status
             else if (calcMode == CalcMode.WAITING_FLOW_VERIFICATION_2000)
