@@ -729,11 +729,11 @@ namespace FlowMeter
                     {
                         calcMode = CalcMode.WAITING_REPORT_VOLUME_23;
 
+                        lblExternalStatus.Content = "Waiting report volume...";
+
                         // send report volume
                         if (SendToSerial("@23?\r\n"))
                             _notifier.ShowInformation("Sent 'Report Volume'(@23?) command.");
-
-                        lblExternalStatus.Content = "Waiting report volume...";
 
                     }, TaskScheduler.FromCurrentSynchronizationContext());
             }
